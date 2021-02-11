@@ -7,15 +7,15 @@ import android.graphics.Color;
 import android.util.SparseArray;
 
 public class Jurnal extends JnlData {
-    int id = -1;
-    String judul = "";
-    int tipeCover = 0;
-    int tipeBg = 0;
-    JurnalStyle style = null;
-    SparseArray<JnlAktivitas> aktivitases = new SparseArray<>();
+    public int id = -1;
+    public String judul = "";
+    public int tipeCover = 0;
+    public int tipeBg = 0;
+    public JurnalStyle style = new JurnalStyle();
+    public SparseArray<JnlAktivitas> aktivitases = new SparseArray<>();
 
-    SQLiteDatabase dbAktivitas = null;
-    SQLiteDatabase dbAttr = null;
+    private SQLiteDatabase dbAktivitas = null;
+    private SQLiteDatabase dbAttr = null;
 
     public void loadAktivitas(DbFactory dbFactory) {
         Cursor c = dbAktivitas.rawQuery("SELECT * FROM aktivitas", null);

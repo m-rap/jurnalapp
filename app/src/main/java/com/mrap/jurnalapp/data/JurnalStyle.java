@@ -5,15 +5,15 @@ import android.graphics.Color;
 import android.widget.ImageView;
 
 public class JurnalStyle {
-    JurnalStyleBg bg = new JurnalStyleBgColor();
-    JurnalStyleCover coverStyle;
+    public JurnalStyleBg bg = new JurnalStyleBgColor();
+    public JurnalStyleCover coverStyle = new JurnalStyleCover();
 
     public static abstract class JurnalStyleBg {
         public abstract void render(ImageView iv);
     }
 
     public static class JurnalStyleBgColor extends JurnalStyleBg {
-        String color = "#000";
+        public String color = "#000000";
 
         @Override
         public void render(ImageView iv) {
@@ -23,7 +23,7 @@ public class JurnalStyle {
     }
 
     public static class JurnalStyleBgImg extends JurnalStyleBg {
-        Bitmap img;
+        public Bitmap img;
 
         @Override
         public void render(ImageView iv) {
@@ -32,12 +32,13 @@ public class JurnalStyle {
         }
     }
 
-    public static abstract class JurnalStyleCover {
-        public abstract void render(ImageView iv);
+    public static class JurnalStyleCover {
+        public void render(ImageView iv) {}
     }
 
     public static class JurnalStyleCoverRes extends JurnalStyleCover {
-        int res;
+        public int res;
+
         @Override
         public void render(ImageView iv) {
             iv.setImageDrawable(null);
@@ -46,7 +47,8 @@ public class JurnalStyle {
     }
 
     public static class JurnalStyleCoverImg extends JurnalStyleCover {
-        Bitmap img;
+        public Bitmap img;
+
         @Override
         public void render(ImageView iv) {
             iv.setBackgroundColor(Color.parseColor("#00000000"));
