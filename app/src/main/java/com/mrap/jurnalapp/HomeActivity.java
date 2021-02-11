@@ -30,7 +30,6 @@ public class HomeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_home);
         FlexboxLayout layout = findViewById(R.id.jurnal_container);
-        layout.setJustifyContent(JustifyContent.SPACE_BETWEEN);
         layout.removeAllViews();
 
         Jurnal jurnal = new Jurnal();
@@ -66,10 +65,9 @@ public class HomeActivity extends Activity {
                             " gr " + flexLine.getTotalFlexGrow() + " sr " + flexLine.getTotalFlexShrink() +
                             " cs " + flexLine.getCrossSize());
                     float targetMargin = (float)(layout.getWidth() - flexLine.getMainSize()) / (flexLine.getItemCount() - 1);
-                    Log.d(TAG, "targetMargin " + targetMargin);
-                    layout.setJustifyContent(JustifyContent.FLEX_START);
                     int lineItemCount = flexLine.getItemCount();
                     int childCount = layout.getChildCount();
+                    Log.d(TAG, "targetMargin " + targetMargin + " lineItemCount " + lineItemCount + " childCount " + childCount);
                     for (int i = 0; i < childCount; i++) {
                         if ((i + 1) % lineItemCount == 0) {
                             continue;
@@ -77,6 +75,7 @@ public class HomeActivity extends Activity {
                         View v = layout.getChildAt(i);
                         FlexboxLayout.LayoutParams lp = (FlexboxLayout.LayoutParams)v.getLayoutParams();
                         lp.rightMargin += targetMargin;
+                        v.setLayoutParams(lp);
                     }
                 }
             }

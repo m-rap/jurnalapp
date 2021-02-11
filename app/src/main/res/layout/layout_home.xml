@@ -33,7 +33,8 @@
             android:id="@+id/jurnal_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:flexWrap="wrap" />
+            app:flexWrap="wrap"
+            app:justifyContent="flex_start" />
     </ScrollView>
 
     <Button

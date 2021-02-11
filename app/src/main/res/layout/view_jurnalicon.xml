@@ -8,14 +8,14 @@
 
     <ImageView
         android:id="@+id/imgBg"
-        android:layout_width="50dp"
+        android:layout_width="90dp"
         android:layout_height="100dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imgCover"
-        android:layout_width="50dp"
+        android:layout_width="90dp"
         android:layout_height="100dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
