@@ -1,6 +1,7 @@
 package com.mrap.jurnalapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -89,5 +90,10 @@ public class HomeActivity extends Activity {
         jurnal.style.bg.render(ivBg);
         jurnal.style.bg.render(ivCover);
         return root;
+    }
+
+    private void onClickTambahJurnal(View view) {
+        Intent intent = new Intent(this, TambahJurnalActivity.class);
+        startActivity(intent);
     }
 }
