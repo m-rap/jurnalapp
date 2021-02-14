@@ -1,13 +1,12 @@
 package com.mrap.jurnalapp.data;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.SparseArray;
+import android.util.Log;
 
 public class DbFactory {
+    private static final String TAG = "DbFactory";
     private Context context;
     private String rootPath;
 
@@ -86,20 +85,24 @@ public class DbFactory {
             }
         }
 
+        String createSql = "" +
+                "CREATE TABLE IF NOT EXISTS attr (" +
+                "attr_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "attr_tipe INTEGER," +
+                "attr_key TEXT," +
+                "attr_val_text TEXT," +
+                "attr_val_num NUMBER," +
+                "attr_val_blob BLOB" +
+                ")";
+        String path = rootPath + "/" + idsPath + "/attr.db";
+
         SQLiteOpenHelper sqLiteOpenHelper = new SQLiteOpenHelper(context,
-                rootPath + "/" + idsPath + "/attr.db",
+                path,
                 null, 1) {
             @Override
             public void onCreate(SQLiteDatabase db) {
-                db.execSQL("" +
-                        "CREATE TABLE IF NOT EXISTS attr (" +
-                        "attr_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        "attr_tipe INTEGER," +
-                        "attr_key TEXT," +
-                        "attr_val_text TEXT," +
-                        "attr_val_num NUMBER," +
-                        "attr_val_blob BLOB" +
-                        ")");
+                Log.d(TAG, "creating attr table " + path + "\n" + createSql);
+                db.execSQL(createSql);
             }
 
             @Override

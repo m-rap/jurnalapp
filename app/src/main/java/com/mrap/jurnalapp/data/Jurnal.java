@@ -3,7 +3,6 @@ package com.mrap.jurnalapp.data;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.util.SparseArray;
 
 public class Jurnal extends JnlData {
@@ -41,7 +40,7 @@ public class Jurnal extends JnlData {
         style = new JurnalStyle();
         if (tipeCover == -1) {
             JurnalStyle.JurnalStyleCoverImg s = new JurnalStyle.JurnalStyleCoverImg();
-            Cursor c = dbAttr.rawQuery("SELECT * FROM attr_val_blob WHERE attr_key = 'coverimg'", null);
+            Cursor c = dbAttr.rawQuery("SELECT attr_val_blob FROM attr WHERE attr_key = 'coverimg'", null);
             if (c.moveToFirst()) {
                 byte[] img = c.getBlob(c.getColumnIndex("attr_val_blob"));
                 s.img = BitmapFactory.decodeByteArray(img, 0, img.length);
@@ -54,7 +53,7 @@ public class Jurnal extends JnlData {
         }
         if (tipeBg == -1) {
             JurnalStyle.JurnalStyleBgImg s = new JurnalStyle.JurnalStyleBgImg();
-            Cursor c = dbAttr.rawQuery("SELECT * FROM attr_val_blob WHERE attr_key = 'bgimg'", null);
+            Cursor c = dbAttr.rawQuery("SELECT attr_val_blob FROM attr WHERE attr_key = 'bgimg'", null);
             if (c.moveToFirst()) {
                 byte[] img = c.getBlob(c.getColumnIndex("attr_val_blob"));
                 s.img = BitmapFactory.decodeByteArray(img, 0, img.length);
@@ -63,7 +62,7 @@ public class Jurnal extends JnlData {
             style.bg = s;
         } else {
             JurnalStyle.JurnalStyleBgColor bg = new JurnalStyle.JurnalStyleBgColor();
-            Cursor c = dbAttr.rawQuery("SELECT * FROM attr_val_text WHERE attr_key = 'bgimg'", null);
+            Cursor c = dbAttr.rawQuery("SELECT attr_val_text FROM attr WHERE attr_key = 'bgimg'", null);
             if (c.moveToFirst()) {
                 bg.color = c.getString(c.getColumnIndex("attr_val_text"));
             }
@@ -79,7 +78,14 @@ public class Jurnal extends JnlData {
 
     @Override
     public void closeChildrenDbs() {
-        dbAktivitas.close();
-        dbAttr.close();
+        if (dbAktivitas != null) {
+            dbAktivitas.close();
+        }
+        if (dbAttr != null) {
+            dbAttr.close();
+        }
+        for (int i = 0; i < aktivitases.size(); i++) {
+            aktivitases.valueAt(i).closeChildrenDbs();
+        }
     }
 }

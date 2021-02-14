@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.SparseArray;
 
 public class Album extends JnlData {
-    SparseArray<Jurnal> jurnals = new SparseArray<>();
+    public SparseArray<Jurnal> jurnals = new SparseArray<>();
 
     private SQLiteDatabase dbJurnal = null;
 
@@ -46,6 +46,11 @@ public class Album extends JnlData {
 
     @Override
     public void closeChildrenDbs() {
-        dbJurnal.close();
+        if (dbJurnal != null) {
+            dbJurnal.close();
+        }
+        for (int i = 0; i < jurnals.size(); i++) {
+            jurnals.valueAt(i).closeChildrenDbs();
+        }
     }
 }

@@ -53,6 +53,8 @@ public class AktivitasItem extends JnlData {
 
     @Override
     public void closeChildrenDbs() {
-        dbAttr.close();
+        if (dbAttr != null) {
+            dbAttr.close();
+        }
     }
 }
