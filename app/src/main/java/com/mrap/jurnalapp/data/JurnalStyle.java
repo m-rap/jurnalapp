@@ -2,9 +2,14 @@ package com.mrap.jurnalapp.data;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.util.Log;
 import android.widget.ImageView;
 
+import com.mrap.jurnalapp.R;
+
 public class JurnalStyle {
+    final static String TAG = "JurnalStyle";
+
     public JurnalStyleBg bg = new JurnalStyleBgColor();
     public JurnalStyleCover coverStyle = new JurnalStyleCover();
 
@@ -13,7 +18,7 @@ public class JurnalStyle {
     }
 
     public static class JurnalStyleBgColor extends JurnalStyleBg {
-        public String color = "#000000";
+        public String color = "#ffffff";
 
         @Override
         public void render(ImageView iv) {
@@ -23,7 +28,7 @@ public class JurnalStyle {
     }
 
     public static class JurnalStyleBgImg extends JurnalStyleBg {
-        public Bitmap img;
+        public Bitmap img = null;
 
         @Override
         public void render(ImageView iv) {
@@ -33,7 +38,7 @@ public class JurnalStyle {
     }
 
     public static class JurnalStyleCover {
-        public void render(ImageView iv) {}
+        public void render(ImageView iv) { Log.d(TAG, "cover not set, render nothing"); }
     }
 
     public static class JurnalStyleCoverRes extends JurnalStyleCover {
@@ -43,11 +48,13 @@ public class JurnalStyle {
         public void render(ImageView iv) {
             iv.setImageDrawable(null);
             iv.setImageResource(res);
+
+            Log.d(TAG, "render setimageres to " + res + " " + R.drawable.jurnal_cover);
         }
     }
 
     public static class JurnalStyleCoverImg extends JurnalStyleCover {
-        public Bitmap img;
+        public Bitmap img = null;
 
         @Override
         public void render(ImageView iv) {

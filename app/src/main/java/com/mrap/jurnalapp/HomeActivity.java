@@ -89,30 +89,34 @@ public class HomeActivity extends Activity {
         getWindow().getDecorView().post(new Runnable() {
             @Override
             public void run() {
-                List<FlexLine> flexLines = layout.getFlexLines();
-                Iterator<FlexLine> it = flexLines.iterator();
-                if (flexLines.size() > 1) {
-                    FlexLine flexLine = it.next();
-                    Log.d(TAG,  "fi " + flexLine.getFirstIndex() + " c " + flexLine.getItemCount() +
-                            " ms " + flexLine.getMainSize() + " vs " + fcl.getWidth() + " ps " + layout.getWidth() +
-                            " gr " + flexLine.getTotalFlexGrow() + " sr " + flexLine.getTotalFlexShrink() +
-                            " cs " + flexLine.getCrossSize());
-                    float targetMargin = (float)(layout.getWidth() - flexLine.getMainSize()) / (flexLine.getItemCount() - 1);
-                    int lineItemCount = flexLine.getItemCount();
-                    int childCount = layout.getChildCount();
-                    Log.d(TAG, "targetMargin " + targetMargin + " lineItemCount " + lineItemCount + " childCount " + childCount);
-                    for (int i = 0; i < childCount; i++) {
-                        if ((i + 1) % lineItemCount == 0) {
-                            continue;
-                        }
-                        View v = layout.getChildAt(i);
-                        FlexboxLayout.LayoutParams lp = (FlexboxLayout.LayoutParams)v.getLayoutParams();
-                        lp.rightMargin += targetMargin;
-                        v.setLayoutParams(lp);
-                    }
-                }
+                consistentSpaceBetweenUntilLastLine(layout, fcl);
             }
         });
+    }
+
+    public void consistentSpaceBetweenUntilLastLine(FlexboxLayout layout, final ConstraintLayout owner) {
+        List<FlexLine> flexLines = layout.getFlexLines();
+        Iterator<FlexLine> it = flexLines.iterator();
+        if (flexLines.size() > 1) {
+            FlexLine flexLine = it.next();
+//            Log.d(TAG,  "fi " + flexLine.getFirstIndex() + " c " + flexLine.getItemCount() +
+//                    " ms " + flexLine.getMainSize() + " vs " + owner.getWidth() + " ps " + layout.getWidth() +
+//                    " gr " + flexLine.getTotalFlexGrow() + " sr " + flexLine.getTotalFlexShrink() +
+//                    " cs " + flexLine.getCrossSize());
+            float targetMargin = (float)(layout.getWidth() - flexLine.getMainSize()) / (flexLine.getItemCount() - 1);
+            int lineItemCount = flexLine.getItemCount();
+            int childCount = layout.getChildCount();
+//            Log.d(TAG, "targetMargin " + targetMargin + " lineItemCount " + lineItemCount + " childCount " + childCount);
+            for (int i = 0; i < childCount; i++) {
+                if ((i + 1) % lineItemCount == 0) {
+                    continue;
+                }
+                View v = layout.getChildAt(i);
+                FlexboxLayout.LayoutParams lp = (FlexboxLayout.LayoutParams)v.getLayoutParams();
+                lp.rightMargin += targetMargin;
+                v.setLayoutParams(lp);
+            }
+        }
     }
 
     @Override
@@ -126,7 +130,7 @@ public class HomeActivity extends Activity {
         ImageView ivBg = root.findViewById(R.id.imgBg);
         ImageView ivCover = root.findViewById(R.id.imgCover);
         jurnal.style.bg.render(ivBg);
-        jurnal.style.bg.render(ivCover);
+        jurnal.style.coverStyle.render(ivCover);
         TextView textView = root.findViewById(R.id.txtJudul2);
         textView.setText(jurnal.judul);
         return root;

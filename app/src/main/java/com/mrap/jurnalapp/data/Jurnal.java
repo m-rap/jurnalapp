@@ -3,9 +3,14 @@ package com.mrap.jurnalapp.data;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.util.SparseArray;
 
+import com.mrap.jurnalapp.R;
+
 public class Jurnal extends JnlData {
+    final static String TAG = "Jurnal";
+
     public int id = -1;
     public String judul = "";
     public int tipeCover = 0;
@@ -37,6 +42,7 @@ public class Jurnal extends JnlData {
     }
 
     public void loadStyle() {
+        Log.d(TAG, "loadStyle tipeCover " + tipeCover);
         style = new JurnalStyle();
         if (tipeCover == -1) {
             JurnalStyle.JurnalStyleCoverImg s = new JurnalStyle.JurnalStyleCoverImg();
@@ -46,10 +52,19 @@ public class Jurnal extends JnlData {
                 s.img = BitmapFactory.decodeByteArray(img, 0, img.length);
             }
             c.close();
-            style.coverStyle = s;
+            if (s.img != null) {
+                style.coverStyle = s;
+            } else {
+                JurnalStyle.JurnalStyleCoverRes s2 = new JurnalStyle.JurnalStyleCoverRes();
+                s2.res = R.drawable.jurnal_cover;
+                style.coverStyle = s2;
+            }
         } else {
             JurnalStyle.JurnalStyleCoverRes s = new JurnalStyle.JurnalStyleCoverRes();
-            s.res = tipeCover;
+            if (tipeCover == 0) {
+                s.res = R.drawable.jurnal_cover;
+            }
+            style.coverStyle = s;
         }
         if (tipeBg == -1) {
             JurnalStyle.JurnalStyleBgImg s = new JurnalStyle.JurnalStyleBgImg();
