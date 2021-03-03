@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,8 @@ public class HomeActivity extends Activity {
     Album album = null;
     DbFactory dbFactory = null;
 
+    SparseArray<View> jnlViewMap = new SparseArray<>();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +50,7 @@ public class HomeActivity extends Activity {
 
         FlexboxLayout layout = findViewById(R.id.jurnal_container);
         layout.removeAllViews();
+        jnlViewMap.clear();
 
         ConstraintLayout cl = null;
         for (int i = 0; i < album.jurnals.size(); i++) {
@@ -63,6 +68,19 @@ public class HomeActivity extends Activity {
             lp.bottomMargin = 10;
             jnlView.setLayoutParams(lp);
             layout.addView(jnlView);
+            jnlViewMap.put(jurnal.id, jnlView);
+
+            HomeActivity that = this;
+            jnlView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(that, JurnalActivity.class);
+                    intent.putExtra("id", jurnal.id);
+                    startActivity(intent);
+                }
+            });
+
+            registerForContextMenu(jnlView);
         }
 
 //        Jurnal jurnal = new Jurnal();
@@ -133,7 +151,16 @@ public class HomeActivity extends Activity {
         jurnal.style.coverStyle.render(ivCover);
         TextView textView = root.findViewById(R.id.txtJudul2);
         textView.setText(jurnal.judul);
+
         return root;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        int jurnalId = jnlViewMap.keyAt(jnlViewMap.indexOfValue(v));
+        menu.setHeaderTitle("Menu " + album.jurnals.get(jurnalId).judul);
+        menu.add("Hapus");
     }
 
     public void onClickTambahJurnal(View view) {

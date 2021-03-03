@@ -20,6 +20,7 @@
         </activity>
 
         <activity android:name=".TambahJurnalActivity" />
+        <activity android:name=".JurnalActivity" />
 
     </application>
 

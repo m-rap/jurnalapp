@@ -17,12 +17,12 @@ public class Album extends JnlData {
             return;
         }
         jurnals.clear();
+        Jurnal jurnal = new Jurnal();
         int idxId = c.getColumnIndex("jurnal_id");
         int idxJudul = c.getColumnIndex("jurnal_judul");
         int idxTipeCover = c.getColumnIndex("jurnal_tipecover");
         int idxTipeBg = c.getColumnIndex("jurnal_tipebg");
         do {
-            Jurnal jurnal = new Jurnal();
             jurnal.judul = c.getString(idxJudul);
             jurnal.id = c.getInt(idxId);
             jurnal.tipeCover = c.getInt(idxTipeCover);
@@ -30,6 +30,31 @@ public class Album extends JnlData {
             jurnals.put(jurnal.id, jurnal);
         } while (c.moveToNext());
         c.close();
+    }
+
+    public Jurnal getJurnal(int id) {
+        if (jurnals.indexOfKey(id) >= 0) {
+            return jurnals.get(id);
+        }
+
+        Cursor c = dbJurnal.rawQuery("SELECT * FROM jurnal WHERE jurnal_id = ?", new String[] {id + ""});
+        if (!c.moveToFirst()) {
+            c.close();
+            return null;
+        }
+        Jurnal jurnal = new Jurnal();
+        int idxId = c.getColumnIndex("jurnal_id");
+        int idxJudul = c.getColumnIndex("jurnal_judul");
+        int idxTipeCover = c.getColumnIndex("jurnal_tipecover");
+        int idxTipeBg = c.getColumnIndex("jurnal_tipebg");
+        jurnal.judul = c.getString(idxJudul);
+        jurnal.id = c.getInt(idxId);
+        jurnal.tipeCover = c.getInt(idxTipeCover);
+        jurnal.tipeBg = c.getInt(idxTipeBg);
+        jurnals.put(jurnal.id, jurnal);
+        c.close();
+
+        return jurnal;
     }
 
     public void saveJurnal(Jurnal jurnal) {
