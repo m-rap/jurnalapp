@@ -9,10 +9,10 @@ import java.util.Date;
 public class JnlAktivitas extends JnlData {
     Jurnal owner = null;
 
-    int id;
-    String nama = null;
-    SparseArray<AktivitasItem> aktivitasItems = new SparseArray<>();
-    boolean isOnGoing = false;
+    public int id;
+    public String nama = null;
+    public SparseArray<AktivitasItem> aktivitasItems = new SparseArray<>();
+    public boolean isOnGoing = false;
 
     private SQLiteDatabase dbAktivitasItem = null;
 

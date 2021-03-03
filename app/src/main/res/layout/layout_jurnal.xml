@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
-        android:id="@+id/viewOnGoing"
+        android:id="@+id/viewOnGoingWrap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -25,6 +25,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txtJudul3">
 
         <LinearLayout
+            android:id="@+id/viewOnGoing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
@@ -36,9 +37,10 @@
         android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewOnGoing">
+        app:layout_constraintTop_toBottomOf="@+id/viewOnGoingWrap">
 
         <LinearLayout
+            android:id="@+id/viewListAktivitas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />

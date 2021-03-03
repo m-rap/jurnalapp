@@ -52,6 +52,9 @@ public class HomeActivity extends Activity {
         layout.removeAllViews();
         jnlViewMap.clear();
 
+        Util util = new Util(this);
+        int margin = (int)util.convertDipToPix(10);
+
         ConstraintLayout cl = null;
         for (int i = 0; i < album.jurnals.size(); i++) {
             Jurnal jurnal = album.jurnals.valueAt(i);
@@ -62,10 +65,10 @@ public class HomeActivity extends Activity {
                 cl = jnlView;
             }
             FlexboxLayout.LayoutParams lp = new FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            lp.topMargin = 10;
-            lp.leftMargin = 10;
-            lp.rightMargin = 10;
-            lp.bottomMargin = 10;
+            lp.topMargin = margin;
+            lp.leftMargin = margin;
+            lp.rightMargin = margin;
+            lp.bottomMargin = margin;
             jnlView.setLayoutParams(lp);
             layout.addView(jnlView);
             jnlViewMap.put(jurnal.id, jnlView);
@@ -82,25 +85,6 @@ public class HomeActivity extends Activity {
 
             registerForContextMenu(jnlView);
         }
-
-//        Jurnal jurnal = new Jurnal();
-//        jurnal.style = new JurnalStyle();
-//        jurnal.style.bg = new JurnalStyle.JurnalStyleBgColor();
-//
-//        ConstraintLayout cl = null;
-//        for (int i = 0; i < 50; i++) {
-//            ConstraintLayout jnlView = createJurnalIcon(jurnal);
-//            if (i == 0) {
-//                cl = jnlView;
-//            }
-//            FlexboxLayout.LayoutParams lp = new FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//            lp.topMargin = 10;
-//            lp.leftMargin = 10;
-//            lp.rightMargin = 10;
-//            lp.bottomMargin = 10;
-//            jnlView.setLayoutParams(lp);
-//            layout.addView(jnlView);
-//        }
 
         final ConstraintLayout fcl = cl;
 
