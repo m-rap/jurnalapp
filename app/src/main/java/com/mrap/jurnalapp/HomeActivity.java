@@ -7,6 +7,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,6 +22,7 @@ import com.mrap.jurnalapp.data.Jurnal;
 import java.util.Iterator;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -55,15 +57,11 @@ public class HomeActivity extends Activity {
         Util util = new Util(this);
         int margin = (int)util.convertDipToPix(10);
 
-        ConstraintLayout cl = null;
         for (int i = 0; i < album.jurnals.size(); i++) {
             Jurnal jurnal = album.jurnals.valueAt(i);
             jurnal.openChildrenDbs(dbFactory);
             jurnal.loadStyle();
             ConstraintLayout jnlView = createJurnalIcon(jurnal);
-            if (i == 0) {
-                cl = jnlView;
-            }
             FlexboxLayout.LayoutParams lp = new FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.topMargin = margin;
             lp.leftMargin = margin;
@@ -86,23 +84,21 @@ public class HomeActivity extends Activity {
             registerForContextMenu(jnlView);
         }
 
-        final ConstraintLayout fcl = cl;
-
         getWindow().getDecorView().post(new Runnable() {
             @Override
             public void run() {
-                consistentSpaceBetweenUntilLastLine(layout, fcl);
+                consistentSpaceBetweenUntilLastLine(layout);
             }
         });
     }
 
-    public void consistentSpaceBetweenUntilLastLine(FlexboxLayout layout, final ConstraintLayout owner) {
+    public void consistentSpaceBetweenUntilLastLine(FlexboxLayout layout) {
         List<FlexLine> flexLines = layout.getFlexLines();
         Iterator<FlexLine> it = flexLines.iterator();
         if (flexLines.size() > 1) {
             FlexLine flexLine = it.next();
 //            Log.d(TAG,  "fi " + flexLine.getFirstIndex() + " c " + flexLine.getItemCount() +
-//                    " ms " + flexLine.getMainSize() + " vs " + owner.getWidth() + " ps " + layout.getWidth() +
+//                    " ms " + flexLine.getMainSize() + " ps " + layout.getWidth() +
 //                    " gr " + flexLine.getTotalFlexGrow() + " sr " + flexLine.getTotalFlexShrink() +
 //                    " cs " + flexLine.getCrossSize());
             float targetMargin = (float)(layout.getWidth() - flexLine.getMainSize()) / (flexLine.getItemCount() - 1);
@@ -133,6 +129,7 @@ public class HomeActivity extends Activity {
         ImageView ivCover = root.findViewById(R.id.imgCover);
         jurnal.style.bg.render(ivBg);
         jurnal.style.coverStyle.render(ivCover);
+
         TextView textView = root.findViewById(R.id.txtJudul2);
         textView.setText(jurnal.judul);
 
@@ -144,7 +141,35 @@ public class HomeActivity extends Activity {
         super.onCreateContextMenu(menu, v, menuInfo);
         int jurnalId = jnlViewMap.keyAt(jnlViewMap.indexOfValue(v));
         menu.setHeaderTitle("Menu " + album.jurnals.get(jurnalId).judul);
-        menu.add("Hapus");
+        menu.add(0, jurnalId, 0, "Hapus");
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        boolean res = super.onContextItemSelected(item);
+        int id = item.getItemId();
+        Log.d(TAG, "context menu item " + item.getTitle() + " " + id);
+        if (item.getTitle().equals("Hapus")) {
+            deleteJurnal(id);
+        }
+        return res;
+    }
+
+    public void deleteJurnal(int id) {
+        if (album.deleteJurnal(id)) {
+            FlexboxLayout layout = findViewById(R.id.jurnal_container);
+            View v = jnlViewMap.get(id);
+            if (v != null) {
+                layout.removeView(v);
+            }
+
+            getWindow().getDecorView().post(new Runnable() {
+                @Override
+                public void run() {
+                    consistentSpaceBetweenUntilLastLine(layout);
+                }
+            });
+        }
     }
 
     public void onClickTambahJurnal(View view) {

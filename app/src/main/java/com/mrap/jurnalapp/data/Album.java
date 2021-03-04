@@ -3,12 +3,19 @@ package com.mrap.jurnalapp.data;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.util.SparseArray;
 
+import com.mrap.jurnalapp.FileUtil;
+
+import java.io.File;
+
 public class Album extends JnlData {
+    private static final String TAG = "Album";
     public SparseArray<Jurnal> jurnals = new SparseArray<>();
 
     private SQLiteDatabase dbJurnal = null;
+    DbFactory dbFactory = null;
 
     public void loadJurnals() {
         Cursor c = dbJurnal.rawQuery("SELECT * FROM jurnal", null);
@@ -17,12 +24,12 @@ public class Album extends JnlData {
             return;
         }
         jurnals.clear();
-        Jurnal jurnal = new Jurnal();
         int idxId = c.getColumnIndex("jurnal_id");
         int idxJudul = c.getColumnIndex("jurnal_judul");
         int idxTipeCover = c.getColumnIndex("jurnal_tipecover");
         int idxTipeBg = c.getColumnIndex("jurnal_tipebg");
         do {
+            Jurnal jurnal = new Jurnal();
             jurnal.judul = c.getString(idxJudul);
             jurnal.id = c.getInt(idxId);
             jurnal.tipeCover = c.getInt(idxTipeCover);
@@ -64,8 +71,23 @@ public class Album extends JnlData {
         jurnals.put(jurnal.id, jurnal);
     }
 
+    public boolean deleteJurnal(int id) {
+        try {
+            dbJurnal.execSQL("DELETE FROM jurnal WHERE jurnal_id = ?", new String[]{id + ""});
+            FileUtil util = new FileUtil();
+            File f = new File(dbFactory.rootPath + "/" + id);
+            util.deleteRecursive(f);
+            jurnals.remove(id);
+            return true;
+        } catch (Exception ex) {
+            Log.d(TAG, ex.toString());
+        }
+        return false;
+    }
+
     @Override
     public void openChildrenDbs(DbFactory dbFactory) {
+        this.dbFactory = dbFactory;
         dbJurnal = dbFactory.getDbJurnal();
     }
 

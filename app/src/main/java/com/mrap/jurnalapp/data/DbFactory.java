@@ -8,7 +8,7 @@ import android.util.Log;
 public class DbFactory {
     private static final String TAG = "DbFactory";
     private Context context;
-    private String rootPath;
+    public String rootPath;
 
     public DbFactory(Context context, String rootPath) {
         this.context = context;
