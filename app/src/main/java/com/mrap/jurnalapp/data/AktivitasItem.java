@@ -9,13 +9,13 @@ import android.util.SparseArray;
 import java.util.Date;
 
 public class AktivitasItem extends JnlData {
-    JnlAktivitas owner = null;
+    public JnlAktivitas owner = null;
 
-    int id = -1;
-    Date tanggal = null;
-    String judul = "";
-    SparseArray<String> notes = new SparseArray<>();
-    SparseArray<Bitmap> pics = new SparseArray<>();
+    public int id = -1;
+    public Date tanggal = null;
+    public String judul = "";
+    public SparseArray<String> notes = new SparseArray<>();
+    public SparseArray<Bitmap> pics = new SparseArray<>();
 
     private SQLiteDatabase dbAttr = null;
 

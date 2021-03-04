@@ -40,6 +40,7 @@ public class Jurnal extends JnlData {
             jnlAktivitas.id = c.getInt(idxId);
             jnlAktivitas.nama = c.getString(idxNama);
             jnlAktivitas.isOnGoing = c.getInt(idxIsOnGoing) == 1;
+            jnlAktivitas.owner = this;
             aktivitases.put(jnlAktivitas.id, jnlAktivitas);
         } while (c.moveToNext());
         c.close();

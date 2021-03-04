@@ -3,11 +3,15 @@ package com.mrap.jurnalapp.data;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.util.SparseArray;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class JnlAktivitas extends JnlData {
+    private static final String TAG = "JnlAktivitas";
     Jurnal owner = null;
 
     public int id;
@@ -27,19 +31,24 @@ public class JnlAktivitas extends JnlData {
         int idxId = c.getColumnIndex("aktitem_id");
         int idxTanggal = c.getColumnIndex("aktitem_tanggal");
         int idxJudul = c.getColumnIndex("aktitem_judul");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         do {
             AktivitasItem item = new AktivitasItem();
             item.id = c.getInt(idxId);
-            item.tanggal = new Date(c.getInt(idxTanggal));
+            long tgl = c.getLong(idxTanggal);
+            item.tanggal = new Date(tgl * 1000);
+            Log.d(TAG, "loaded tgl " + item.tanggal + " " + tgl);
             item.judul = c.getString(idxJudul);
+            item.owner = this;
             aktivitasItems.put(id, item);
         } while (c.moveToNext());
         c.close();
     }
 
     public void tambahAktivitasItem(String judul, Date tanggal) {
+        Log.d(TAG, "tambahAktivitasItem " + tanggal + " " + (tanggal.getTime() / 1000));
         ContentValues contentValues = new ContentValues();
-        contentValues.put("aktitem_tanggal", tanggal.getTime());
+        contentValues.put("aktitem_tanggal", tanggal.getTime() / 1000);
         contentValues.put("aktitem_judul", judul);
         AktivitasItem aktivitasItem = new AktivitasItem();
         aktivitasItem.id = (int)dbAktivitasItem.insert("aktivitas_item", null, contentValues);
