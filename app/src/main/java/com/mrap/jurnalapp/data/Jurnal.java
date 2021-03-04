@@ -1,5 +1,6 @@
 package com.mrap.jurnalapp.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
@@ -7,6 +8,8 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import com.mrap.jurnalapp.R;
+
+import java.util.Date;
 
 public class Jurnal extends JnlData {
     final static String TAG = "Jurnal";
@@ -20,6 +23,7 @@ public class Jurnal extends JnlData {
 
     private SQLiteDatabase dbAktivitas = null;
     private SQLiteDatabase dbAttr = null;
+    private DbFactory dbFactory = null;
 
     public void loadAktivitas(DbFactory dbFactory) {
         Cursor c = dbAktivitas.rawQuery("SELECT * FROM aktivitas", null);
@@ -85,8 +89,23 @@ public class Jurnal extends JnlData {
         }
     }
 
+    public void tambahAktivitas(String nama, Date tglMulai) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("aktivitas_nama", nama);
+        contentValues.put("aktivitas_isongoing", true);
+        JnlAktivitas jnlAktivitas = new JnlAktivitas();
+        jnlAktivitas.id = (int)dbAktivitas.insert("aktivitas", null, contentValues);
+        jnlAktivitas.nama = nama;
+        jnlAktivitas.owner = this;
+        jnlAktivitas.openChildrenDbs(dbFactory);
+        jnlAktivitas.tambahAktivitasItem("Mulai", tglMulai);
+        jnlAktivitas.closeChildrenDbs();
+        aktivitases.put(jnlAktivitas.id, jnlAktivitas);
+    }
+
     @Override
     public void openChildrenDbs(DbFactory dbFactory) {
+        this.dbFactory = dbFactory;
         dbAktivitas = dbFactory.getDbAktivitas(id);
         dbAttr = dbFactory.getDbAttr(new int[] {id});
     }

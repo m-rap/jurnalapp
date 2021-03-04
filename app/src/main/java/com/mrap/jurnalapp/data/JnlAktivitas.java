@@ -1,5 +1,6 @@
 package com.mrap.jurnalapp.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.SparseArray;
@@ -34,6 +35,17 @@ public class JnlAktivitas extends JnlData {
             aktivitasItems.put(id, item);
         } while (c.moveToNext());
         c.close();
+    }
+
+    public void tambahAktivitasItem(String judul, Date tanggal) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("aktitem_tanggal", tanggal.getTime());
+        contentValues.put("aktitem_judul", judul);
+        AktivitasItem aktivitasItem = new AktivitasItem();
+        aktivitasItem.id = (int)dbAktivitasItem.insert("aktivitas_item", null, contentValues);
+        aktivitasItem.judul = judul;
+        aktivitasItem.owner = this;
+        aktivitasItems.put(aktivitasItem.id, aktivitasItem);
     }
 
     @Override
