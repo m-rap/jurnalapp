@@ -56,16 +56,17 @@ public class AktivitasBar extends TextView {
         long endTime = items.get(nAktItem - 1).tanggal.getTime();
         long timeLength = endTime - startTime;
         float lineWidth = canvas.getWidth() - poinRadius * 2;
-        canvas.translate(0, 0);
+        float yStart = canvas.getHeight() / 2 - poinRadius;
+        canvas.translate(0, yStart);
         Paint paint = new Paint();
-        paint.setColor(Color.parseColor("#00FF00"));
+        paint.setColor(Color.parseColor("#000000"));
         Paint blue = new Paint();
         blue.setColor(Color.parseColor("#0000FF"));
         canvas.drawLine(poinRadius, poinRadius, poinRadius + lineWidth, poinRadius, paint);
         for (int i = 0; i < nAktItem; i++) {
             long t = items.get(i).tanggal.getTime() - startTime;
             float x = t * lineWidth / timeLength;
-            canvas.drawCircle(x, poinRadius, poinRadius, blue);
+            canvas.drawCircle(x + poinRadius, poinRadius, poinRadius, blue);
         }
     }
 }

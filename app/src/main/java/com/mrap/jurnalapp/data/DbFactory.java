@@ -64,7 +64,8 @@ public class DbFactory {
                         "CREATE TABLE IF NOT EXISTS aktivitas_item (" +
                         "aktitem_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                         "aktitem_tanggal INTEGER," +
-                        "aktitem_judul TEXT" +
+                        "aktitem_judul TEXT," +
+                        "aktitem_note TEXT" +
                         ")");
             }
 

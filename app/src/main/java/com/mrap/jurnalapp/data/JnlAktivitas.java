@@ -20,6 +20,7 @@ public class JnlAktivitas extends JnlData {
     public boolean isOnGoing = false;
 
     private SQLiteDatabase dbAktivitasItem = null;
+    private DbFactory dbFactory = null;
 
     public void loadAktivitasItems(DbFactory dbFactory) {
         Cursor c = dbAktivitasItem.rawQuery("SELECT * FROM aktivitas_item", null);
@@ -44,20 +45,26 @@ public class JnlAktivitas extends JnlData {
         c.close();
     }
 
-    public void tambahAktivitasItem(String judul, Date tanggal) {
+    public void tambahAktivitasItem(String judul, String note, Date tanggal) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("aktitem_tanggal", tanggal.getTime() / 1000);
         contentValues.put("aktitem_judul", judul);
+        contentValues.put("aktitem_note", note);
         AktivitasItem aktivitasItem = new AktivitasItem();
         aktivitasItem.id = (int)dbAktivitasItem.insert("aktivitas_item", null, contentValues);
         aktivitasItem.judul = judul;
+        aktivitasItem.note = note;
         aktivitasItem.owner = this;
+//        aktivitasItem.openChildrenDbs(dbFactory);
+//        aktivitasItem.loadPics();
+//        aktivitasItem.closeChildrenDbs();
         aktivitasItems.put(aktivitasItem.id, aktivitasItem);
         Log.d(TAG, "tambah aktivitas " + aktivitasItem.id + " " + judul + " " + tanggal + " length " + aktivitasItems.size());
     }
 
     @Override
     public void openChildrenDbs(DbFactory dbFactory) {
+        this.dbFactory = dbFactory;
         dbAktivitasItem = dbFactory.getDbAktivitasItem(owner.id, id);
     }
 

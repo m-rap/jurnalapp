@@ -118,7 +118,7 @@ public class Jurnal extends JnlData {
         jnlAktivitas.nama = nama;
         jnlAktivitas.owner = this;
         jnlAktivitas.openChildrenDbs(dbFactory);
-        jnlAktivitas.tambahAktivitasItem("Mulai", tglMulai);
+        jnlAktivitas.tambahAktivitasItem("Mulai", "", tglMulai);
         jnlAktivitas.closeChildrenDbs();
         aktivitases.put(jnlAktivitas.id, jnlAktivitas);
     }
@@ -152,7 +152,7 @@ public class Jurnal extends JnlData {
         }
         aktivitas.isOnGoing = false;
         aktivitas.openChildrenDbs(dbFactory);
-        aktivitas.tambahAktivitasItem("Selesai", tgl);
+        aktivitas.tambahAktivitasItem("Selesai", "", tgl);
         aktivitas.closeChildrenDbs();
         aktivitases.put(itemId, aktivitas);
     }

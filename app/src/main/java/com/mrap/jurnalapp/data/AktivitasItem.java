@@ -14,26 +14,15 @@ public class AktivitasItem extends JnlData {
     public int id = -1;
     public Date tanggal = null;
     public String judul = "";
-    public SparseArray<String> notes = new SparseArray<>();
+    public String note = "";
     public SparseArray<Bitmap> pics = new SparseArray<>();
 
     private SQLiteDatabase dbAttr = null;
 
-    public void loadNotesPics() {
-        notes.clear();
+    public void loadPics() {
         pics.clear();
 
-        Cursor c = dbAttr.rawQuery("SELECT attr_val_text FROM attr WHERE attr_key = 'note'", null);
-        if (c.moveToFirst()) {
-            int idxText = c.getColumnIndex("attr_val_text");
-            int idxId = c.getColumnIndex("attr_id");
-            do {
-                notes.put(c.getInt(idxId), c.getString(idxText));
-            } while (c.moveToNext());
-        }
-        c.close();
-
-        c = dbAttr.rawQuery("SELECT attr_val_blob FROM attr WHERE attr_key = 'pic'", null);
+        Cursor c = dbAttr.rawQuery("SELECT attr_val_blob FROM attr WHERE attr_key = 'pic'", null);
         if (c.moveToFirst()) {
             int idxBlob = c.getColumnIndex("attr_val_blob");
             int idxId = c.getColumnIndex("attr_id");
