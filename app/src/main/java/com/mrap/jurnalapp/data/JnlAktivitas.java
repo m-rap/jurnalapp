@@ -37,16 +37,14 @@ public class JnlAktivitas extends JnlData {
             item.id = c.getInt(idxId);
             long tgl = c.getLong(idxTanggal);
             item.tanggal = new Date(tgl * 1000);
-            Log.d(TAG, "loaded tgl " + item.tanggal + " " + tgl);
             item.judul = c.getString(idxJudul);
             item.owner = this;
-            aktivitasItems.put(id, item);
+            aktivitasItems.put(item.id, item);
         } while (c.moveToNext());
         c.close();
     }
 
     public void tambahAktivitasItem(String judul, Date tanggal) {
-        Log.d(TAG, "tambahAktivitasItem " + tanggal + " " + (tanggal.getTime() / 1000));
         ContentValues contentValues = new ContentValues();
         contentValues.put("aktitem_tanggal", tanggal.getTime() / 1000);
         contentValues.put("aktitem_judul", judul);
@@ -55,6 +53,7 @@ public class JnlAktivitas extends JnlData {
         aktivitasItem.judul = judul;
         aktivitasItem.owner = this;
         aktivitasItems.put(aktivitasItem.id, aktivitasItem);
+        Log.d(TAG, "tambah aktivitas " + aktivitasItem.id + " " + judul + " " + tanggal + " length " + aktivitasItems.size());
     }
 
     @Override

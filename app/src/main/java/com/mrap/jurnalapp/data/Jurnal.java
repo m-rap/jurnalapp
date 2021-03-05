@@ -46,6 +46,25 @@ public class Jurnal extends JnlData {
         c.close();
     }
 
+    public JnlAktivitas getAktivitas(int id) {
+        Cursor c = dbAktivitas.rawQuery("SELECT * FROM aktivitas WHERE aktivitas_id = ?", new String[] {id + ""});
+        if (!c.moveToFirst()) {
+            c.close();
+            return null;
+        }
+        int idxId = c.getColumnIndex("aktivitas_id");
+        int idxNama = c.getColumnIndex("aktivitas_nama");
+        int idxIsOnGoing = c.getColumnIndex("aktivitas_isongoing");
+        JnlAktivitas jnlAktivitas = new JnlAktivitas();
+        jnlAktivitas.id = c.getInt(idxId);
+        jnlAktivitas.nama = c.getString(idxNama);
+        jnlAktivitas.isOnGoing = c.getInt(idxIsOnGoing) == 1;
+        jnlAktivitas.owner = this;
+        aktivitases.put(jnlAktivitas.id, jnlAktivitas);
+        c.close();
+        return jnlAktivitas;
+    }
+
     public void loadStyle() {
         Log.d(TAG, "loadStyle tipeCover " + tipeCover);
         style = new JurnalStyle();
@@ -122,5 +141,24 @@ public class Jurnal extends JnlData {
         for (int i = 0; i < aktivitases.size(); i++) {
             aktivitases.valueAt(i).closeChildrenDbs();
         }
+    }
+
+    public void akhiriAktivitas(int itemId, Date tgl) {
+        dbAktivitas.execSQL("UPDATE aktivitas SET aktivitas_isongoing = ? WHERE aktivitas_id = ?", new String[] {"0", itemId + ""});
+        JnlAktivitas aktivitas = aktivitases.get(itemId);
+        if (aktivitas == null) {
+            aktivitas = getAktivitas(itemId);
+            //aktivitases.put(itemId, aktivitas);
+        }
+        aktivitas.isOnGoing = false;
+        aktivitas.openChildrenDbs(dbFactory);
+        aktivitas.tambahAktivitasItem("Selesai", tgl);
+        aktivitas.closeChildrenDbs();
+        aktivitases.put(itemId, aktivitas);
+    }
+
+    public void hapusAktivitas(int itemId) {
+        dbAktivitas.execSQL("DELETE FROM aktivitas WHERE aktivitas_id=?", new String[] {itemId + ""});
+        aktivitases.remove(itemId);
     }
 }
