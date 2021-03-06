@@ -178,7 +178,8 @@ public class JurnalActivity extends Activity {
         ConstraintLayout parent = findViewById(R.id.jnl_root);
         ConstraintLayout layoutTambahAktivitas = (ConstraintLayout)LayoutInflater.from(that).inflate(R.layout.layout_tambahaktivitas, null);
 
-        ConstraintLayout bgLayout = createModal(that, parent, layoutTambahAktivitas);
+        ModalUtil modalUtil = new ModalUtil();
+        ConstraintLayout bgLayout = modalUtil.createModal(that, parent, layoutTambahAktivitas);
 
         SimpleDateFormat sdf = createSdf();
         TextView textView = layoutTambahAktivitas.findViewById(R.id.takt_txtWaktu);
@@ -212,37 +213,6 @@ public class JurnalActivity extends Activity {
         });
     }
 
-    private ConstraintLayout createModal(Activity that, ConstraintLayout root, ConstraintLayout content) {
-        ConstraintLayout bgLayout = new ConstraintLayout(this);
-        bgLayout.setId(View.generateViewId());
-        bgLayout.setBackgroundColor(Color.parseColor("#AA000000"));
-        root.addView(bgLayout);
-        ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        bgLayout.setLayoutParams(lp);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(root);
-        constraintSet.connect(bgLayout.getId(), ConstraintSet.TOP, root.getId(), ConstraintSet.TOP);
-        constraintSet.connect(bgLayout.getId(), ConstraintSet.LEFT, root.getId(), ConstraintSet.LEFT);
-        constraintSet.applyTo(root);
-
-        Util util = new Util(that);
-        int margin = (int)util.convertDipToPix(10);
-
-        content.setId(View.generateViewId());
-        ConstraintLayout.LayoutParams lp2 = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp2.topMargin = lp2.rightMargin = lp2.bottomMargin = lp2.leftMargin = margin;
-        content.setLayoutParams(lp2);
-        bgLayout.addView(content);
-        ConstraintSet constraintSet2 = new ConstraintSet();
-        constraintSet2.clone(bgLayout);
-        constraintSet2.connect(content.getId(), ConstraintSet.TOP, bgLayout.getId(), ConstraintSet.TOP);
-        constraintSet2.connect(content.getId(), ConstraintSet.LEFT, bgLayout.getId(), ConstraintSet.LEFT);
-        constraintSet2.connect(content.getId(), ConstraintSet.RIGHT, bgLayout.getId(), ConstraintSet.RIGHT);
-        constraintSet2.connect(content.getId(), ConstraintSet.BOTTOM, bgLayout.getId(), ConstraintSet.BOTTOM);
-        constraintSet2.applyTo(bgLayout);
-        return bgLayout;
-    }
-
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -252,8 +222,9 @@ public class JurnalActivity extends Activity {
         menu.setHeaderTitle("Menu");
         if (aktivitas != null) {
             if (aktivitas.isOnGoing) {
-                menu.add(0, aktId, 0, "Selesai");
                 menu.add(0, aktId, 0, "Catat momen");
+                menu.add(0, aktId, 0, "Atur");
+                menu.add(0, aktId, 0, "Selesai");
             } else {
                 menu.add(0, aktId, 0, "Hapus");
             }
@@ -284,7 +255,8 @@ public class JurnalActivity extends Activity {
 
             ConstraintLayout root = findViewById(R.id.jnl_root);
             ConstraintLayout layoutTambahAktitem = (ConstraintLayout)LayoutInflater.from(this).inflate(R.layout.layout_tambahaktitem, null);
-            ConstraintLayout bgLayout = createModal(this, root, layoutTambahAktitem);
+            ModalUtil modalUtil = new ModalUtil();
+            ConstraintLayout bgLayout = modalUtil.createModal(this, root, layoutTambahAktitem);
 
             SimpleDateFormat sdf = createSdf();
 
@@ -325,6 +297,11 @@ public class JurnalActivity extends Activity {
                     root.removeView(bgLayout);
                 }
             });
+        } else if (item.getTitle().equals("Atur")) {
+            JnlAktivitas aktivitas = jurnal.aktivitases.get(item.getItemId());
+            ViewAktivitasFull viewAktivitasFull = new ViewAktivitasFull();
+            ConstraintLayout root = findViewById(R.id.jnl_root);
+            viewAktivitasFull.showModal(this, root, aktivitas);
         }
         return res;
     }
