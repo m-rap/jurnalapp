@@ -9,6 +9,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 public class ModalUtil {
+
+    public static interface Callback {
+        public void onCallback(int id, int code, Object[] params);
+    }
+
     public ConstraintLayout createModal(Activity that, ConstraintLayout root, ConstraintLayout content) {
         ConstraintLayout bgLayout = new ConstraintLayout(that);
         bgLayout.setId(View.generateViewId());

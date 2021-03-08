@@ -41,15 +41,7 @@ public class AktivitasBar extends TextView {
             return;
         }
         ArrayList<AktivitasItem> items = new ArrayList<>();
-        for (int i = 0; i < nAktItem; i++) {
-            items.add(aktivitas.aktivitasItems.valueAt(i));
-        }
-        Collections.sort(items, new Comparator<AktivitasItem>() {
-            @Override
-            public int compare(AktivitasItem o1, AktivitasItem o2) {
-                return o1.tanggal.getTime() < o2.tanggal.getTime() ? -1 : 1;
-            }
-        });
+        aktivitas.getSortedAktItemsByDate(items, aktivitas.aktivitasItems);
         Util util = new Util(getContext());
         float poinRadius = (int)util.convertDipToPix(5);
         long startTime = items.get(0).tanggal.getTime();

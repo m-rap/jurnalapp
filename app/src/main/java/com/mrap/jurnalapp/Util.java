@@ -9,6 +9,8 @@ import android.os.Build;
 import android.view.WindowInsets;
 import android.view.WindowMetrics;
 
+import java.text.SimpleDateFormat;
+
 public class Util {
     private Context context;
 
@@ -41,5 +43,9 @@ public class Util {
 //        }
         activity.getWindowManager().getDefaultDisplay().getSize(size);
         return size;
+    }
+
+    public SimpleDateFormat createSdf() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 }

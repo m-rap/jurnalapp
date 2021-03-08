@@ -23,6 +23,9 @@ import com.mrap.jurnalapp.data.Jurnal;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 import androidx.annotation.NonNull;
@@ -70,10 +73,6 @@ public class JurnalActivity extends Activity {
         refresh();
     }
 
-    private SimpleDateFormat createSdf() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    }
-
     private void refresh() {
         jurnal.loadAktivitas(dbFactory);
 
@@ -87,13 +86,13 @@ public class JurnalActivity extends Activity {
         int margin = (int)util.convertDipToPix(10);
         int width = util.getDisplaySize().x - 2 * margin;
 
-        SimpleDateFormat sdf = createSdf();
+        SimpleDateFormat sdf = util.createSdf();
 
         for (int i = 0, onGoingCount = 0, nOnGoingCount = 0; i < jurnal.aktivitases.size(); i++) {
             JnlAktivitas jnlAktivitas = jurnal.aktivitases.valueAt(i);
             ConstraintLayout root = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.view_aktivitas, null);
 
-            refreshAktivitasView(sdf, jnlAktivitas, root);
+            refreshAktivitasView(jnlAktivitas, root);
 
             if (jnlAktivitas.isOnGoing) {
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -133,7 +132,10 @@ public class JurnalActivity extends Activity {
         });
     }
 
-    private void refreshAktivitasView(SimpleDateFormat sdf, JnlAktivitas jnlAktivitas, ConstraintLayout root) {
+    private void refreshAktivitasView(JnlAktivitas jnlAktivitas, ConstraintLayout root) {
+        Util util = new Util(this);
+        SimpleDateFormat sdf = util.createSdf();
+
         jnlAktivitas.openChildrenDbs(dbFactory);
         jnlAktivitas.loadAktivitasItems(dbFactory);
         jnlAktivitas.closeChildrenDbs();
@@ -144,8 +146,10 @@ public class JurnalActivity extends Activity {
         textView = root.findViewById(R.id.txtTanggalMulai);
         textView.setText(sdf.format(jnlAktivitas.aktivitasItems.valueAt(0).tanggal));
 
-        int nAktItem = jnlAktivitas.aktivitasItems.size();
-        AktivitasItem itemTerbaru = jnlAktivitas.aktivitasItems.valueAt(nAktItem - 1);
+        ArrayList<AktivitasItem> items = new ArrayList<>();
+        int nAktItem = jnlAktivitas.getSortedAktItemsByDate(items, jnlAktivitas.aktivitasItems);
+
+        AktivitasItem itemTerbaru = items.get(nAktItem - 1);
 
         AktivitasBar aktivitasBar = root.findViewById(R.id.viewBar);
 
@@ -181,7 +185,8 @@ public class JurnalActivity extends Activity {
         ModalUtil modalUtil = new ModalUtil();
         ConstraintLayout bgLayout = modalUtil.createModal(that, parent, layoutTambahAktivitas);
 
-        SimpleDateFormat sdf = createSdf();
+        Util util = new Util(that);
+        SimpleDateFormat sdf = util.createSdf();
         TextView textView = layoutTambahAktivitas.findViewById(R.id.takt_txtWaktu);
         textView.setText(sdf.format(new Date()));
 
@@ -254,54 +259,60 @@ public class JurnalActivity extends Activity {
             JnlAktivitas aktivitas = jurnal.aktivitases.get(item.getItemId());
 
             ConstraintLayout root = findViewById(R.id.jnl_root);
-            ConstraintLayout layoutTambahAktitem = (ConstraintLayout)LayoutInflater.from(this).inflate(R.layout.layout_tambahaktitem, null);
-            ModalUtil modalUtil = new ModalUtil();
-            ConstraintLayout bgLayout = modalUtil.createModal(this, root, layoutTambahAktitem);
-
-            SimpleDateFormat sdf = createSdf();
-
-            TextView textView = layoutTambahAktitem.findViewById(R.id.taktit_tanggal);
-            textView.setText(sdf.format(new Date()));
-
-            Button button = layoutTambahAktitem.findViewById(R.id.taktit_btnBatal);
-            button.setOnClickListener(new View.OnClickListener() {
+            ViewTambahAktItem viewTambahAktItem = new ViewTambahAktItem();
+            viewTambahAktItem.showModal(this, root, null, new ModalUtil.Callback() {
                 @Override
-                public void onClick(View v) {
-                    root.removeView(bgLayout);
+                public void onCallback(int id, int code, Object[] params) {
+                    String judul = (String)params[0];
+                    String note = (String)params[1];
+                    Date tanggal = (Date)params[2];
+                    aktivitas.openChildrenDbs(dbFactory);
+                    aktivitas.tambahAktivitasItem(judul, note, tanggal);
+                    aktivitas.closeChildrenDbs();
+
+                    ConstraintLayout aktView = (ConstraintLayout)aktivitasViews.get(aktivitas.id);
+                    refreshAktivitasView(aktivitas, aktView);
                 }
             });
 
-            button = layoutTambahAktitem.findViewById(R.id.taktit_btnSimpan);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    TextView textView1 = layoutTambahAktitem.findViewById(R.id.taktit_txtJudul);
-                    String judul = textView1.getText().toString();
-
-                    textView1 = layoutTambahAktitem.findViewById(R.id.taktit_note);
-                    String note = textView1.getText().toString();
-
-                    textView1 = layoutTambahAktitem.findViewById(R.id.taktit_tanggal);
-                    try {
-                        Date tanggal = sdf.parse(textView1.getText().toString());
-                        aktivitas.openChildrenDbs(dbFactory);
-                        aktivitas.tambahAktivitasItem(judul, note, tanggal);
-                        aktivitas.closeChildrenDbs();
-
-                        ConstraintLayout aktView = (ConstraintLayout)aktivitasViews.get(aktivitas.id);
-                        refreshAktivitasView(sdf, aktivitas, aktView);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    root.removeView(bgLayout);
-                }
-            });
         } else if (item.getTitle().equals("Atur")) {
             JnlAktivitas aktivitas = jurnal.aktivitases.get(item.getItemId());
             ViewAktivitasFull viewAktivitasFull = new ViewAktivitasFull();
             ConstraintLayout root = findViewById(R.id.jnl_root);
-            viewAktivitasFull.showModal(this, root, aktivitas);
+            JurnalActivity that = this;
+            viewAktivitasFull.showModal(this, root, aktivitas, new ModalUtil.Callback() {
+                @Override
+                public void onCallback(int id, int code, Object[] params) {
+                    if (code == ViewAktivitasFull.CB_CODE_EDIT) {
+                        ViewTambahAktItem viewTambahAktItem = new ViewTambahAktItem();
+                        AktivitasItem aktItem = aktivitas.aktivitasItems.get(id);
+                        if (aktItem == null) {
+                            return;
+                        }
+                        viewTambahAktItem.showModal(that, root, aktItem, new ModalUtil.Callback() {
+                            @Override
+                            public void onCallback(int id, int code, Object[] params) {
+                                String judul = (String)params[0];
+                                String note = (String)params[1];
+                                Date tanggal = (Date)params[2];
+                                aktivitas.openChildrenDbs(dbFactory);
+                                aktivitas.editAktivitasItem(id, judul, note, tanggal);
+                                aktivitas.closeChildrenDbs();
+
+                                ConstraintLayout aktView = (ConstraintLayout)aktivitasViews.get(aktivitas.id);
+                                refreshAktivitasView(aktivitas, aktView);
+                            }
+                        });
+                    } else if (code == ViewAktivitasFull.CB_CODE_REMOVE) {
+                        aktivitas.openChildrenDbs(dbFactory);
+                        aktivitas.hapusAktivitasItem(id);
+                        aktivitas.closeChildrenDbs();
+
+                        ConstraintLayout aktView = (ConstraintLayout)aktivitasViews.get(aktivitas.id);
+                        refreshAktivitasView(aktivitas, aktView);
+                    }
+                }
+            });
         }
         return res;
     }

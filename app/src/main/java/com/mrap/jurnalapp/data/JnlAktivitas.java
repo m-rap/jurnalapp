@@ -8,6 +8,9 @@ import android.util.SparseArray;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 public class JnlAktivitas extends JnlData {
@@ -60,6 +63,50 @@ public class JnlAktivitas extends JnlData {
 //        aktivitasItem.closeChildrenDbs();
         aktivitasItems.put(aktivitasItem.id, aktivitasItem);
         Log.d(TAG, "tambah aktivitas " + aktivitasItem.id + " " + judul + " " + tanggal + " length " + aktivitasItems.size());
+    }
+
+    public void editAktivitasItem(int id, String judul, String note, Date tanggal) {
+        try {
+            dbAktivitasItem.execSQL("UPDATE aktivitas_item SET aktitem_judul = ?, aktitem_note = ?, aktitem_tanggal = ? WHERE aktitem_id = ?", new String[]{
+                    judul, note, (tanggal.getTime() / 1000) + "", id + ""
+            });
+            AktivitasItem aktivitasItem = aktivitasItems.get(id);
+            if (aktivitasItem == null) {
+                aktivitasItem = new AktivitasItem();
+                aktivitasItems.put(id, aktivitasItem);
+            }
+            aktivitasItem.judul = judul;
+            aktivitasItem.note = note;
+            aktivitasItem.tanggal = tanggal;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void hapusAktivitasItem(int id) {
+        try {
+            dbAktivitasItem.execSQL("DELETE FROM aktivitas_item WHERE aktitem_id = ?", new String[]{
+                    id + ""
+            });
+            aktivitasItems.remove(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getSortedAktItemsByDate(ArrayList<AktivitasItem> items, SparseArray<AktivitasItem> aktivitasItems) {
+        int nAktItem = aktivitasItems.size();
+        Log.d(TAG, "nAktItem " + nAktItem);
+        for (int i = 0; i < nAktItem; i++) {
+            items.add(aktivitasItems.valueAt(i));
+        }
+        Collections.sort(items, new Comparator<AktivitasItem>() {
+            @Override
+            public int compare(AktivitasItem o1, AktivitasItem o2) {
+                return o1.tanggal.getTime() < o2.tanggal.getTime() ? -1 : 1;
+            }
+        });
+        return nAktItem;
     }
 
     @Override
