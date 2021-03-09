@@ -22,9 +22,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@id/aktfu_btnBack"
+        app:layout_constraintBottom_toTopOf="@+id/aktfu_btnBack"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/aktfu_nama">
+        app:layout_constraintTop_toBottomOf="@+id/aktfu_nama">
 
         <TableLayout
             android:id="@+id/aktfu_paneAktItem"

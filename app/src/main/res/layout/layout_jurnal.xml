@@ -17,20 +17,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <HorizontalScrollView
-        android:id="@+id/viewOnGoingWrap"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/viewOnGoingWrap2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtJudul3">
 
-        <LinearLayout
-            android:id="@+id/viewOnGoing"
+        <TextView
+            android:id="@+id/jnl_txtOnGoingPagerIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" />
-    </HorizontalScrollView>
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="1 dari 1"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewOnGoing2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--    <HorizontalScrollView-->
+<!--        android:id="@+id/viewOnGoingWrap"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/viewOnGoingWrap2">-->
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/viewOnGoing"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal" />-->
+<!--    </HorizontalScrollView>-->
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -39,7 +68,7 @@
         android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewOnGoingWrap">
+        app:layout_constraintTop_toBottomOf="@+id/viewOnGoingWrap2">
 
         <LinearLayout
             android:id="@+id/viewListAktivitas"

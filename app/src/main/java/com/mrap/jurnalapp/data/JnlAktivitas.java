@@ -96,7 +96,7 @@ public class JnlAktivitas extends JnlData {
 
     public int getSortedAktItemsByDate(ArrayList<AktivitasItem> items, SparseArray<AktivitasItem> aktivitasItems) {
         int nAktItem = aktivitasItems.size();
-        Log.d(TAG, "nAktItem " + nAktItem);
+        //Log.d(TAG, "nAktItem " + nAktItem);
         for (int i = 0; i < nAktItem; i++) {
             items.add(aktivitasItems.valueAt(i));
         }

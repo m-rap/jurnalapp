@@ -24,14 +24,13 @@ import com.mrap.jurnalapp.data.Jurnal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.viewpager.widget.ViewPager;
 
 public class JurnalActivity extends Activity {
 
@@ -40,6 +39,7 @@ public class JurnalActivity extends Activity {
     Jurnal jurnal = null;
 
     SparseArray<View> aktivitasViews = new SparseArray<>();
+    SparseArray<View> aktivitasViewsOnGoing = new SparseArray<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,17 +76,19 @@ public class JurnalActivity extends Activity {
     private void refresh() {
         jurnal.loadAktivitas(dbFactory);
 
-        LinearLayout viewOnGoing = findViewById(R.id.viewOnGoing);
+        //LinearLayout viewOnGoing = findViewById(R.id.viewOnGoing);
         LinearLayout viewListAktivitas = findViewById(R.id.viewListAktivitas);
 
-        viewOnGoing.removeAllViews();
+        //viewOnGoing.removeAllViews();
         viewListAktivitas.removeAllViews();
+        aktivitasViews.clear();
+        aktivitasViewsOnGoing.clear();
 
         Util util = new Util(this);
         int margin = (int)util.convertDipToPix(10);
         int width = util.getDisplaySize().x - 2 * margin;
 
-        SimpleDateFormat sdf = util.createSdf();
+        //SimpleDateFormat sdf = util.createSdf();
 
         for (int i = 0, onGoingCount = 0, nOnGoingCount = 0; i < jurnal.aktivitases.size(); i++) {
             JnlAktivitas jnlAktivitas = jurnal.aktivitases.valueAt(i);
@@ -95,10 +97,11 @@ public class JurnalActivity extends Activity {
             refreshAktivitasView(jnlAktivitas, aktivitasRoot);
 
             if (jnlAktivitas.isOnGoing) {
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
-                lp.topMargin = lp.rightMargin = lp.bottomMargin = lp.leftMargin = margin;
-                aktivitasRoot.setLayoutParams(lp);
-                viewOnGoing.addView(aktivitasRoot);
+//                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                lp.topMargin = lp.rightMargin = lp.bottomMargin = lp.leftMargin = margin;
+//                aktivitasRoot.setLayoutParams(lp);
+//                viewOnGoing.addView(aktivitasRoot);
+                aktivitasViewsOnGoing.put(jnlAktivitas.id, aktivitasRoot);
 
                 onGoingCount++;
             } else {
@@ -120,22 +123,37 @@ public class JurnalActivity extends Activity {
             });
         }
 
-        getWindow().getDecorView().post(new Runnable() {
-            @Override
-            public void run() {
-//                for (int i = 0; i < aktivitasViews.size(); i++) {
-//                    aktivitasViews.valueAt(i).findViewById(R.id.viewBar).invalidate();
-//                }
-//                ViewGroup viewOnGoingWrap = findViewById(R.id.viewOnGoingWrap);
-//                int hPx = viewOnGoingWrap.getHeight();
-//                int maxHPx = (int)util.convertDipToPix(200);
-//                if (hPx > maxHPx) {
-//                    ViewGroup.LayoutParams lp = viewOnGoingWrap.getLayoutParams();
-//                    lp.height = maxHPx;
-//                    viewOnGoingWrap.setLayoutParams(lp);
-//                }
-            }
-        });
+        refreshOnGoingPane();
+    }
+
+    private void refreshOnGoingPane() {
+        ViewPager viewOnGoing2 = findViewById(R.id.viewOnGoing2);
+        viewOnGoing2.setAdapter(new JnlPagerAdapter(this, aktivitasViewsOnGoing));
+
+        ConstraintLayout viewOnGoingWrap2 = findViewById(R.id.viewOnGoingWrap2);
+        if (aktivitasViewsOnGoing.size() > 0) {
+            View aktivitasRoot = aktivitasViewsOnGoing.valueAt(0);
+            aktivitasRoot.measure(0, 0);
+            int height = aktivitasRoot.getMeasuredHeight();
+
+            TextView textView = findViewById(R.id.jnl_txtOnGoingPagerIndicator);
+            //textView.measure(0, 0);
+            //int height2 = textView.getMeasuredHeight();
+            //textView.setVisibility(View.VISIBLE);
+
+            viewOnGoingWrap2.getLayoutParams().height = height;
+            viewOnGoingWrap2.setVisibility(View.VISIBLE);
+
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(viewOnGoingWrap2);
+            constraintSet.connect(textView.getId(), ConstraintSet.BOTTOM, viewOnGoingWrap2.getId(), ConstraintSet.BOTTOM);
+            constraintSet.connect(textView.getId(), ConstraintSet.RIGHT, viewOnGoingWrap2.getId(), ConstraintSet.RIGHT);
+            constraintSet.applyTo(viewOnGoingWrap2);
+
+        } else {
+            viewOnGoingWrap2.getLayoutParams().height = 0;
+            viewOnGoingWrap2.setVisibility(View.GONE);
+        }
     }
 
     private void refreshAktivitasView(JnlAktivitas jnlAktivitas, ConstraintLayout aktivitasRoot) {
@@ -263,8 +281,11 @@ public class JurnalActivity extends Activity {
                                 aktivitasViews.remove(aktivitas.id);
 
                                 if (aktivitas.isOnGoing) {
-                                    LinearLayout view = findViewById(R.id.viewOnGoing);
-                                    view.removeView(v);
+//                                    LinearLayout view = findViewById(R.id.viewOnGoing);
+//                                    view.removeView(v);
+
+                                    aktivitasViewsOnGoing.remove(aktivitas.id);
+                                    refreshOnGoingPane();
                                 } else {
                                     LinearLayout view = findViewById(R.id.viewListAktivitas);
                                     view.removeView(v);
