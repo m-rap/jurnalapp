@@ -243,18 +243,30 @@ public class JurnalActivity extends Activity {
             jurnal.akhiriAktivitas(item.getItemId(), new Date());
             refresh();
         } else if (item.getTitle().equals("Hapus")) {
+            ViewConfirmation viewConfirmation = new ViewConfirmation();
+            ConstraintLayout root = findViewById(R.id.jnl_root);
             JnlAktivitas aktivitas = jurnal.aktivitases.get(item.getItemId());
-            jurnal.hapusAktivitas(aktivitas.id);
-            View v = aktivitasViews.get(aktivitas.id);
-            aktivitasViews.remove(aktivitas.id);
 
-            if (aktivitas.isOnGoing) {
-                LinearLayout view = findViewById(R.id.viewOnGoing);
-                view.removeView(v);
-            } else {
-                LinearLayout view = findViewById(R.id.viewListAktivitas);
-                view.removeView(v);
-            }
+            viewConfirmation.showModal(this, root, "Apakah Anda yakin menghapus aktivitas " + aktivitas.nama + "?",
+                    false, new ModalUtil.Callback() {
+                        @Override
+                        public void onCallback(int id, int code, Object[] params) {
+                            if (code == ViewConfirmation.CODE_OK) {
+                                jurnal.hapusAktivitas(aktivitas.id);
+                                View v = aktivitasViews.get(aktivitas.id);
+                                aktivitasViews.remove(aktivitas.id);
+
+                                if (aktivitas.isOnGoing) {
+                                    LinearLayout view = findViewById(R.id.viewOnGoing);
+                                    view.removeView(v);
+                                } else {
+                                    LinearLayout view = findViewById(R.id.viewListAktivitas);
+                                    view.removeView(v);
+                                }
+                            }
+                        }
+                    });
+
         } else if (item.getTitle().equals("Catat momen")) {
             JnlAktivitas aktivitas = jurnal.aktivitases.get(item.getItemId());
 

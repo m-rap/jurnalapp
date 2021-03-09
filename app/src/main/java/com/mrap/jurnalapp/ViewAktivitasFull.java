@@ -111,8 +111,17 @@ public class ViewAktivitasFull {
                 }, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        callback.onCallback(aktItem.id, CB_CODE_REMOVE, null);
-                        refreshPaneAktItem();
+                        ViewConfirmation viewConfirmation = new ViewConfirmation();
+                        viewConfirmation.showModal(that, root, "Hapus " + aktItem.judul + "?",
+                                false, new ModalUtil.Callback() {
+                                    @Override
+                                    public void onCallback(int id, int code, Object[] params) {
+                                        if (code == ViewConfirmation.CODE_OK) {
+                                            callback.onCallback(aktItem.id, CB_CODE_REMOVE, null);
+                                            refreshPaneAktItem();
+                                        }
+                                    }
+                                });
                     }
                 }));
             }

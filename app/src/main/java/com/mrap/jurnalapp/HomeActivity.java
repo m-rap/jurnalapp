@@ -124,16 +124,16 @@ public class HomeActivity extends Activity {
     }
 
     public ConstraintLayout createJurnalIcon(Jurnal jurnal) {
-        ConstraintLayout root = (ConstraintLayout)LayoutInflater.from(this).inflate(R.layout.view_jurnalicon, null);
-        ImageView ivBg = root.findViewById(R.id.imgBg);
-        ImageView ivCover = root.findViewById(R.id.imgCover);
+        ConstraintLayout iconRoot = (ConstraintLayout)LayoutInflater.from(this).inflate(R.layout.view_jurnalicon, null);
+        ImageView ivBg = iconRoot.findViewById(R.id.imgBg);
+        ImageView ivCover = iconRoot.findViewById(R.id.imgCover);
         jurnal.style.bg.render(ivBg);
         jurnal.style.coverStyle.render(ivCover);
 
-        TextView textView = root.findViewById(R.id.txtJudul2);
+        TextView textView = iconRoot.findViewById(R.id.txtJudul2);
         textView.setText(jurnal.judul);
 
-        return root;
+        return iconRoot;
     }
 
     @Override
@@ -150,7 +150,17 @@ public class HomeActivity extends Activity {
         int id = item.getItemId();
         Log.d(TAG, "context menu item " + item.getTitle() + " " + id);
         if (item.getTitle().equals("Hapus")) {
-            deleteJurnal(id);
+            ViewConfirmation viewConfirmation = new ViewConfirmation();
+            ConstraintLayout root = findViewById(R.id.home_root);
+            viewConfirmation.showModal(this, root, "Apakah Anda yakin menghapus jurnal " + album.jurnals.get(id).judul + "?",
+                    true, new ModalUtil.Callback() {
+                @Override
+                public void onCallback(int callbackId, int code, Object[] params) {
+                    if (code == ViewConfirmation.CODE_OK) {
+                        deleteJurnal(id);
+                    }
+                }
+            });
         }
         return res;
     }
