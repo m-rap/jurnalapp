@@ -90,28 +90,34 @@ public class JurnalActivity extends Activity {
 
         for (int i = 0, onGoingCount = 0, nOnGoingCount = 0; i < jurnal.aktivitases.size(); i++) {
             JnlAktivitas jnlAktivitas = jurnal.aktivitases.valueAt(i);
-            ConstraintLayout root = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.view_aktivitas, null);
+            ConstraintLayout aktivitasRoot = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.view_aktivitas, null);
 
-            refreshAktivitasView(jnlAktivitas, root);
+            refreshAktivitasView(jnlAktivitas, aktivitasRoot);
 
             if (jnlAktivitas.isOnGoing) {
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
                 lp.topMargin = lp.rightMargin = lp.bottomMargin = lp.leftMargin = margin;
-                root.setLayoutParams(lp);
-                viewOnGoing.addView(root);
+                aktivitasRoot.setLayoutParams(lp);
+                viewOnGoing.addView(aktivitasRoot);
 
                 onGoingCount++;
             } else {
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
                 lp.topMargin = lp.rightMargin = lp.bottomMargin = lp.leftMargin = margin;
-                root.setLayoutParams(lp);
-                viewListAktivitas.addView(root);
+                aktivitasRoot.setLayoutParams(lp);
+                viewListAktivitas.addView(aktivitasRoot);
 
                 nOnGoingCount++;
             }
 
-            aktivitasViews.put(jnlAktivitas.id, root);
-            registerForContextMenu(root);
+            aktivitasViews.put(jnlAktivitas.id, aktivitasRoot);
+            registerForContextMenu(aktivitasRoot);
+            aktivitasRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openContextMenu(aktivitasRoot);
+                }
+            });
         }
 
         getWindow().getDecorView().post(new Runnable() {
@@ -132,7 +138,7 @@ public class JurnalActivity extends Activity {
         });
     }
 
-    private void refreshAktivitasView(JnlAktivitas jnlAktivitas, ConstraintLayout root) {
+    private void refreshAktivitasView(JnlAktivitas jnlAktivitas, ConstraintLayout aktivitasRoot) {
         Util util = new Util(this);
         SimpleDateFormat sdf = util.createSdf();
 
@@ -140,10 +146,10 @@ public class JurnalActivity extends Activity {
         jnlAktivitas.loadAktivitasItems(dbFactory);
         jnlAktivitas.closeChildrenDbs();
 
-        TextView textView = root.findViewById(R.id.txtNama);
+        TextView textView = aktivitasRoot.findViewById(R.id.txtNama);
         textView.setText(jnlAktivitas.nama);
 
-        textView = root.findViewById(R.id.txtTanggalMulai);
+        textView = aktivitasRoot.findViewById(R.id.txtTanggalMulai);
         textView.setText(sdf.format(jnlAktivitas.aktivitasItems.valueAt(0).tanggal));
 
         ArrayList<AktivitasItem> items = new ArrayList<>();
@@ -151,19 +157,19 @@ public class JurnalActivity extends Activity {
 
         AktivitasItem itemTerbaru = items.get(nAktItem - 1);
 
-        AktivitasBar aktivitasBar = root.findViewById(R.id.viewBar);
+        AktivitasBar aktivitasBar = aktivitasRoot.findViewById(R.id.viewBar);
 
         if (jnlAktivitas.isOnGoing) {
-            textView = root.findViewById(R.id.txtMomen);
+            textView = aktivitasRoot.findViewById(R.id.txtMomen);
             textView.setText(itemTerbaru.judul);
 
-            textView = root.findViewById(R.id.txtTanggalMomen);
+            textView = aktivitasRoot.findViewById(R.id.txtTanggalMomen);
             textView.setText(sdf.format(itemTerbaru.tanggal));
         } else {
             aktivitasBar.setBackgroundColor(Color.WHITE);
-            root.findViewById(R.id.akt_txtMomenTitle).setVisibility(View.GONE);
-            root.findViewById(R.id.txtMomen).setVisibility(View.GONE);
-            root.findViewById(R.id.txtTanggalMomen).setVisibility(View.GONE);
+            aktivitasRoot.findViewById(R.id.akt_txtMomenTitle).setVisibility(View.GONE);
+            aktivitasRoot.findViewById(R.id.txtMomen).setVisibility(View.GONE);
+            aktivitasRoot.findViewById(R.id.txtTanggalMomen).setVisibility(View.GONE);
         }
 
         aktivitasBar.aktivitas = jnlAktivitas;
@@ -294,7 +300,7 @@ public class JurnalActivity extends Activity {
             JurnalActivity that = this;
             viewAktivitasFull.showModal(this, root, aktivitas, new ModalUtil.Callback() {
                 @Override
-                public void onCallback(int id, int code, Object[] params) {
+                public void onCallback(int id, int code, Object[] params1) {
                     if (code == ViewAktivitasFull.CB_CODE_EDIT) {
                         ViewTambahAktItem viewTambahAktItem = new ViewTambahAktItem();
                         AktivitasItem aktItem = aktivitas.aktivitasItems.get(id);
@@ -303,13 +309,18 @@ public class JurnalActivity extends Activity {
                         }
                         viewTambahAktItem.showModal(that, root, aktItem, new ModalUtil.Callback() {
                             @Override
-                            public void onCallback(int id, int code, Object[] params) {
-                                String judul = (String)params[0];
-                                String note = (String)params[1];
-                                Date tanggal = (Date)params[2];
+                            public void onCallback(int id, int code, Object[] params2) {
+                                String judul = (String)params2[0];
+                                String note = (String)params2[1];
+                                Date tanggal = (Date)params2[2];
                                 aktivitas.openChildrenDbs(dbFactory);
                                 aktivitas.editAktivitasItem(id, judul, note, tanggal);
                                 aktivitas.closeChildrenDbs();
+
+                                if (params1 != null && params1.length > 0) {
+                                    ModalUtil.Callback p1Callback = (ModalUtil.Callback)params1[0];
+                                    p1Callback.onCallback(-1, -1, null);
+                                }
 
                                 ConstraintLayout aktView = (ConstraintLayout)aktivitasViews.get(aktivitas.id);
                                 refreshAktivitasView(aktivitas, aktView);

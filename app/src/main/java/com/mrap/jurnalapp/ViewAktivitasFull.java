@@ -105,8 +105,15 @@ public class ViewAktivitasFull {
                 tr.addView(createEditRemoveBtn(that, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        callback.onCallback(aktItem.id, CB_CODE_EDIT, null);
-                        refreshPaneAktItem();
+                        Object[] params = new Object[] {
+                                new ModalUtil.Callback() {
+                                    @Override
+                                    public void onCallback(int id, int code, Object[] params) {
+                                        refreshPaneAktItem();
+                                    }
+                                }
+                        };
+                        callback.onCallback(aktItem.id, CB_CODE_EDIT, params);
                     }
                 }, new View.OnClickListener() {
                     @Override
