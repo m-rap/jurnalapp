@@ -136,22 +136,22 @@ public class JurnalActivity extends Activity {
             aktivitasRoot.measure(0, 0);
             int height = aktivitasRoot.getMeasuredHeight();
 
-            TextView textView = findViewById(R.id.jnl_txtOnGoingPagerIndicator);
+//            TextView textView = findViewById(R.id.jnl_txtOnGoingPagerIndicator);
             //textView.measure(0, 0);
             //int height2 = textView.getMeasuredHeight();
             //textView.setVisibility(View.VISIBLE);
 
-            viewOnGoingWrap2.getLayoutParams().height = height;
+            viewOnGoing2.getLayoutParams().height = height;
             viewOnGoingWrap2.setVisibility(View.VISIBLE);
 
-            ConstraintSet constraintSet = new ConstraintSet();
-            constraintSet.clone(viewOnGoingWrap2);
-            constraintSet.connect(textView.getId(), ConstraintSet.BOTTOM, viewOnGoingWrap2.getId(), ConstraintSet.BOTTOM);
-            constraintSet.connect(textView.getId(), ConstraintSet.RIGHT, viewOnGoingWrap2.getId(), ConstraintSet.RIGHT);
-            constraintSet.applyTo(viewOnGoingWrap2);
+//            ConstraintSet constraintSet = new ConstraintSet();
+//            constraintSet.clone(viewOnGoingWrap2);
+//            constraintSet.connect(textView.getId(), ConstraintSet.BOTTOM, viewOnGoingWrap2.getId(), ConstraintSet.BOTTOM);
+//            constraintSet.connect(textView.getId(), ConstraintSet.RIGHT, viewOnGoingWrap2.getId(), ConstraintSet.RIGHT);
+//            constraintSet.applyTo(viewOnGoingWrap2);
 
         } else {
-            viewOnGoingWrap2.getLayoutParams().height = 0;
+            viewOnGoing2.getLayoutParams().height = 0;
             viewOnGoingWrap2.setVisibility(View.GONE);
         }
     }
