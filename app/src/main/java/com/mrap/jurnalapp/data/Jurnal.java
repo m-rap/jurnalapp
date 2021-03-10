@@ -3,12 +3,15 @@ package com.mrap.jurnalapp.data;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.util.Log;
 import android.util.SparseArray;
 
 import com.mrap.jurnalapp.R;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Date;
 
 public class Jurnal extends JnlData {
@@ -101,11 +104,50 @@ public class Jurnal extends JnlData {
             style.bg = s;
         } else {
             JurnalStyle.JurnalStyleBgColor bg = new JurnalStyle.JurnalStyleBgColor();
-            Cursor c = dbAttr.rawQuery("SELECT attr_val_text FROM attr WHERE attr_key = 'bgimg'", null);
+            Cursor c = dbAttr.rawQuery("SELECT attr_val_text FROM attr WHERE attr_key = 'bgcolor'", null);
             if (c.moveToFirst()) {
                 bg.color = c.getString(c.getColumnIndex("attr_val_text"));
             }
             c.close();
+            style.bg = bg;
+        }
+    }
+
+    public void saveStyle() {
+        if (tipeCover == -1) {
+            JurnalStyle.JurnalStyleCoverImg s = (JurnalStyle.JurnalStyleCoverImg)style.coverStyle;
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            s.img.compress(Bitmap.CompressFormat.PNG, 0, baos);
+            byte[] imgBytes = baos.toByteArray();
+
+            dbAttr.execSQL("DELETE FROM attr WHERE attr_key = 'coverimg'");
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("attr_key", "coverimg");
+            contentValues.put("attr_val_blob", imgBytes);
+            dbAttr.insert("attr", null, contentValues);
+        }
+
+        if (tipeBg == -1) {
+            JurnalStyle.JurnalStyleBgImg s = (JurnalStyle.JurnalStyleBgImg)style.bg;
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            s.img.compress(Bitmap.CompressFormat.PNG, 0, baos);
+            byte[] imgBytes = baos.toByteArray();
+
+            dbAttr.execSQL("DELETE FROM attr WHERE attr_key = 'bgimg'");
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("attr_key", "bgimg");
+            contentValues.put("attr_val_blob", imgBytes);
+            dbAttr.insert("attr", null, contentValues);
+        } else {
+            JurnalStyle.JurnalStyleBgColor bg = (JurnalStyle.JurnalStyleBgColor)style.bg;
+
+            dbAttr.execSQL("DELETE FROM attr WHERE attr_key = 'bgcolor'");
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("attr_key", "bgcolor");
+            contentValues.put("attr_val_text", bg.color);
+            dbAttr.insert("attr", null, contentValues);
         }
     }
 

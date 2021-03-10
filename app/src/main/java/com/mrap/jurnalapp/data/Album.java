@@ -34,6 +34,9 @@ public class Album extends JnlData {
             jurnal.id = c.getInt(idxId);
             jurnal.tipeCover = c.getInt(idxTipeCover);
             jurnal.tipeBg = c.getInt(idxTipeBg);
+            jurnal.openChildrenDbs(dbFactory);
+            jurnal.loadStyle();
+            jurnal.closeChildrenDbs();
             jurnals.put(jurnal.id, jurnal);
         } while (c.moveToNext());
         c.close();
@@ -58,6 +61,9 @@ public class Album extends JnlData {
         jurnal.id = c.getInt(idxId);
         jurnal.tipeCover = c.getInt(idxTipeCover);
         jurnal.tipeBg = c.getInt(idxTipeBg);
+        jurnal.openChildrenDbs(dbFactory);
+        jurnal.loadStyle();
+        jurnal.closeChildrenDbs();
         jurnals.put(jurnal.id, jurnal);
         c.close();
 
@@ -69,6 +75,10 @@ public class Album extends JnlData {
         contentValues.put("jurnal_judul", jurnal.judul);
         jurnal.id = (int)dbJurnal.insert("jurnal", null, contentValues);
         jurnals.put(jurnal.id, jurnal);
+
+        jurnal.openChildrenDbs(dbFactory);
+        jurnal.saveStyle();
+        jurnal.closeChildrenDbs();
     }
 
     public boolean deleteJurnal(int id) {
