@@ -27,7 +27,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtJudul2"
+        android:id="@+id/jnlic_txtJudul"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="end"

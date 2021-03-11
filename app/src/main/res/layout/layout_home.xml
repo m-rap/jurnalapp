@@ -30,12 +30,10 @@
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:layout_constraintVertical_bias="1.0">
 
-        <com.google.android.flexbox.FlexboxLayout
+        <com.mrap.jurnalapp.FlowLayout
             android:id="@+id/jurnal_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:flexWrap="wrap"
-            app:justifyContent="flex_start" />
+            android:layout_height="wrap_content" />
     </ScrollView>
 
     <Button

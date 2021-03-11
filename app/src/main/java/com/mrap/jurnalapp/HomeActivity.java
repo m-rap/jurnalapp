@@ -11,10 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.flexbox.FlexLine;
-import com.google.android.flexbox.FlexboxLayout;
+//import com.google.android.flexbox.FlexLine;
+//import com.google.android.flexbox.FlexboxLayout;
 import com.mrap.jurnalapp.data.Album;
 import com.mrap.jurnalapp.data.DbFactory;
 import com.mrap.jurnalapp.data.Jurnal;
@@ -50,8 +51,9 @@ public class HomeActivity extends Activity {
         album.openChildrenDbs(dbFactory);
         album.loadJurnals();
 
-        FlexboxLayout layout = findViewById(R.id.jurnal_container);
-        layout.removeAllViews();
+//        FlexboxLayout layout = findViewById(R.id.jurnal_container);
+        FlowLayout layout = findViewById(R.id.jurnal_container);
+//        layout.removeAllViews();
         jnlViewMap.clear();
 
         Util util = new Util(this);
@@ -62,13 +64,14 @@ public class HomeActivity extends Activity {
             jurnal.openChildrenDbs(dbFactory);
             jurnal.loadStyle();
             ConstraintLayout jnlView = createJurnalIcon(jurnal);
-            FlexboxLayout.LayoutParams lp = new FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//            FlexboxLayout.LayoutParams lp = new FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.topMargin = margin;
             lp.leftMargin = margin;
             lp.rightMargin = margin;
             lp.bottomMargin = margin;
             jnlView.setLayoutParams(lp);
-            layout.addView(jnlView);
+//            layout.addView(jnlView);
             jnlViewMap.put(jurnal.id, jnlView);
 
             HomeActivity that = this;
@@ -87,35 +90,36 @@ public class HomeActivity extends Activity {
         getWindow().getDecorView().post(new Runnable() {
             @Override
             public void run() {
-                consistentSpaceBetweenUntilLastLine(layout);
+//                consistentSpaceBetweenUntilLastLine(layout);
+                layout.setContents(jnlViewMap);
             }
         });
     }
 
-    public void consistentSpaceBetweenUntilLastLine(FlexboxLayout layout) {
-        List<FlexLine> flexLines = layout.getFlexLines();
-        Iterator<FlexLine> it = flexLines.iterator();
-        if (flexLines.size() > 1) {
-            FlexLine flexLine = it.next();
-//            Log.d(TAG,  "fi " + flexLine.getFirstIndex() + " c " + flexLine.getItemCount() +
-//                    " ms " + flexLine.getMainSize() + " ps " + layout.getWidth() +
-//                    " gr " + flexLine.getTotalFlexGrow() + " sr " + flexLine.getTotalFlexShrink() +
-//                    " cs " + flexLine.getCrossSize());
-            float targetMargin = (float)(layout.getWidth() - flexLine.getMainSize()) / (flexLine.getItemCount() - 1);
-            int lineItemCount = flexLine.getItemCount();
-            int childCount = layout.getChildCount();
-//            Log.d(TAG, "targetMargin " + targetMargin + " lineItemCount " + lineItemCount + " childCount " + childCount);
-            for (int i = 0; i < childCount; i++) {
-                if ((i + 1) % lineItemCount == 0) {
-                    continue;
-                }
-                View v = layout.getChildAt(i);
-                FlexboxLayout.LayoutParams lp = (FlexboxLayout.LayoutParams)v.getLayoutParams();
-                lp.rightMargin += targetMargin;
-                v.setLayoutParams(lp);
-            }
-        }
-    }
+//    public void consistentSpaceBetweenUntilLastLine(FlexboxLayout layout) {
+//        List<FlexLine> flexLines = layout.getFlexLines();
+//        Iterator<FlexLine> it = flexLines.iterator();
+//        if (flexLines.size() > 1) {
+//            FlexLine flexLine = it.next();
+////            Log.d(TAG,  "fi " + flexLine.getFirstIndex() + " c " + flexLine.getItemCount() +
+////                    " ms " + flexLine.getMainSize() + " ps " + layout.getWidth() +
+////                    " gr " + flexLine.getTotalFlexGrow() + " sr " + flexLine.getTotalFlexShrink() +
+////                    " cs " + flexLine.getCrossSize());
+//            float targetMargin = (float)(layout.getWidth() - flexLine.getMainSize()) / (flexLine.getItemCount() - 1);
+//            int lineItemCount = flexLine.getItemCount();
+//            int childCount = layout.getChildCount();
+////            Log.d(TAG, "targetMargin " + targetMargin + " lineItemCount " + lineItemCount + " childCount " + childCount);
+//            for (int i = 0; i < childCount; i++) {
+//                if ((i + 1) % lineItemCount == 0) {
+//                    continue;
+//                }
+//                View v = layout.getChildAt(i);
+//                FlexboxLayout.LayoutParams lp = (FlexboxLayout.LayoutParams)v.getLayoutParams();
+//                lp.rightMargin += targetMargin;
+//                v.setLayoutParams(lp);
+//            }
+//        }
+//    }
 
     @Override
     protected void onPause() {
@@ -130,7 +134,7 @@ public class HomeActivity extends Activity {
         jurnal.style.bg.render(ivBg);
         jurnal.style.coverStyle.render(ivCover);
 
-        TextView textView = iconRoot.findViewById(R.id.txtJudul2);
+        TextView textView = iconRoot.findViewById(R.id.jnlic_txtJudul);
         textView.setText(jurnal.judul);
 
         return iconRoot;
@@ -167,16 +171,19 @@ public class HomeActivity extends Activity {
 
     public void deleteJurnal(int id) {
         if (album.deleteJurnal(id)) {
-            FlexboxLayout layout = findViewById(R.id.jurnal_container);
+//            FlexboxLayout layout = findViewById(R.id.jurnal_container);
             View v = jnlViewMap.get(id);
             if (v != null) {
-                layout.removeView(v);
+//                layout.removeView(v);
             }
+            jnlViewMap.remove(id);
 
             getWindow().getDecorView().post(new Runnable() {
                 @Override
                 public void run() {
-                    consistentSpaceBetweenUntilLastLine(layout);
+//                    consistentSpaceBetweenUntilLastLine(layout);
+                    FlowLayout layout = findViewById(R.id.jurnal_container);
+                    layout.setContents(jnlViewMap);
                 }
             });
         }

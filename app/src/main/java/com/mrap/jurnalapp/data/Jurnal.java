@@ -5,11 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.util.Log;
 import android.util.SparseArray;
-
-import com.mrap.jurnalapp.R;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
@@ -82,15 +79,13 @@ public class Jurnal extends JnlData {
             if (s.img != null) {
                 style.coverStyle = s;
             } else {
-                JurnalStyle.JurnalStyleCoverRes s2 = new JurnalStyle.JurnalStyleCoverRes();
-                s2.res = R.drawable.jurnal_cover;
+                JurnalStyle.JurnalStyleCoverTipe s2 = new JurnalStyle.JurnalStyleCoverTipe();
+                s2.tipe = 0;
                 style.coverStyle = s2;
             }
         } else {
-            JurnalStyle.JurnalStyleCoverRes s = new JurnalStyle.JurnalStyleCoverRes();
-            if (tipeCover == 0) {
-                s.res = R.drawable.jurnal_cover;
-            }
+            JurnalStyle.JurnalStyleCoverTipe s = new JurnalStyle.JurnalStyleCoverTipe();
+            s.tipe = tipeCover;
             style.coverStyle = s;
         }
         if (tipeBg == -1) {

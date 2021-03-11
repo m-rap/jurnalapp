@@ -73,6 +73,8 @@ public class Album extends JnlData {
     public void saveJurnal(Jurnal jurnal) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("jurnal_judul", jurnal.judul);
+        contentValues.put("jurnal_tipecover", jurnal.tipeCover);
+        contentValues.put("jurnal_tipebg", jurnal.tipeBg);
         jurnal.id = (int)dbJurnal.insert("jurnal", null, contentValues);
         jurnals.put(jurnal.id, jurnal);
 
