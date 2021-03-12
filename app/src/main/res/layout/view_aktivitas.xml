@@ -31,8 +31,57 @@
         android:id="@+id/viewBar2"
         android:layout_width="0dp"
         android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewBar" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="-"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewBar2" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="+"
+        app:layout_constraintStart_toEndOf="@+id/button3"
+        app:layout_constraintTop_toBottomOf="@+id/viewBar2" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="1"
+        app:layout_constraintStart_toEndOf="@+id/button4"
+        app:layout_constraintTop_toBottomOf="@+id/viewBar2" />
+
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text=">"
+        app:layout_constraintStart_toEndOf="@+id/button5"
+        app:layout_constraintTop_toBottomOf="@+id/viewBar2" />
+
+    <Button
+        android:id="@+id/button7"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="^"
+        app:layout_constraintStart_toEndOf="@+id/button6"
+        app:layout_constraintTop_toBottomOf="@+id/viewBar2" />
+
+    <Button
+        android:id="@+id/button8"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="v"
+        app:layout_constraintStart_toEndOf="@+id/button7"
+        app:layout_constraintTop_toBottomOf="@+id/viewBar2" />
 
     <TextView
         android:id="@+id/textView4"
@@ -42,7 +91,7 @@
         android:layout_marginTop="3dp"
         android:text="Dimulai"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewBar2" />
+        app:layout_constraintTop_toBottomOf="@+id/button3" />
 
     <TextView
         android:id="@+id/txtTanggalMulai"

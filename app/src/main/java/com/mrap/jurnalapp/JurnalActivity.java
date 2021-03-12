@@ -196,7 +196,69 @@ public class JurnalActivity extends Activity {
         GifView gifView = aktivitasRoot.findViewById(R.id.viewBar2);
         gifView.setRes(R.drawable.loading_bar);
         gifView.invalidate();
+        x = -239.0f; y = -182.0f;
+        scale = 3.4f;
+        gifView.setResPos(x, y);
+        gifView.setResScale(scale);
+
+        Button button = aktivitasRoot.findViewById(R.id.button5);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                x -= 1;
+                gifView.setResPos(x, y);
+            }
+        });
+
+        button = aktivitasRoot.findViewById(R.id.button6);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                x += 1;
+                gifView.setResPos(x, y);
+            }
+        });
+
+        button = aktivitasRoot.findViewById(R.id.button7);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                y -= 1;
+                gifView.setResPos(x, y);
+            }
+        });
+
+        button = aktivitasRoot.findViewById(R.id.button8);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                y += 1;
+                gifView.setResPos(x, y);
+            }
+        });
+
+        button = aktivitasRoot.findViewById(R.id.button3);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scale -= 0.1;
+                gifView.setResScale(scale);
+            }
+        });
+
+        button = aktivitasRoot.findViewById(R.id.button4);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scale += 0.1;
+                gifView.setResScale(scale);
+            }
+        });
     }
+
+    float x = 0;
+    float y = 0;
+    float scale = 1;
 
     @Override
     protected void onPause() {
