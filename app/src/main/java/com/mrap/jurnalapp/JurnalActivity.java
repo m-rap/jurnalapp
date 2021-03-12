@@ -192,6 +192,10 @@ public class JurnalActivity extends Activity {
 
         aktivitasBar.aktivitas = jnlAktivitas;
         aktivitasBar.invalidate();
+
+        GifView gifView = aktivitasRoot.findViewById(R.id.viewBar2);
+        gifView.setRes(R.drawable.loading_bar);
+        gifView.invalidate();
     }
 
     @Override

@@ -18,7 +18,7 @@
     <com.mrap.jurnalapp.AktivitasBar
         android:id="@+id/viewBar"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="14sp"
         android:layout_marginStart="3dp"
         android:layout_marginTop="3dp"
         android:layout_marginEnd="3dp"
@@ -26,6 +26,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtNama" />
+
+    <com.mrap.jurnalapp.GifView
+        android:id="@+id/viewBar2"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewBar" />
 
     <TextView
         android:id="@+id/textView4"
@@ -35,7 +42,7 @@
         android:layout_marginTop="3dp"
         android:text="Dimulai"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewBar" />
+        app:layout_constraintTop_toBottomOf="@+id/viewBar2" />
 
     <TextView
         android:id="@+id/txtTanggalMulai"

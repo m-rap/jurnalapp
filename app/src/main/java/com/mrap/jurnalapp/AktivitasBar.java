@@ -5,17 +5,16 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.widget.TextView;
+//import android.util.Log;
+import android.widget.LinearLayout;
+//import android.widget.TextView;
 
 import com.mrap.jurnalapp.data.AktivitasItem;
 import com.mrap.jurnalapp.data.JnlAktivitas;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
-public class AktivitasBar extends TextView {
+public class AktivitasBar extends LinearLayout {
     private static final String TAG = "AktivitasBar";
     public JnlAktivitas aktivitas = null;
 
