@@ -13,11 +13,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 public class GifView extends View {
-    private Movie movie = null;
-
-    float x = 0;
-    float y = 0;
-    float scale = 1;
+    private GifNoView gifNoView = new GifNoView();
 
     public GifView(Context context) {
         super(context);
@@ -27,35 +23,12 @@ public class GifView extends View {
         super(context, attrs);
     }
 
-    public void setRes(int res) {
-        movie = Movie.decodeStream(getContext().getResources().openRawResource(res));
+    public GifNoView getGifNoView() {
+        return gifNoView;
     }
 
-    public void setResPos(float x, float y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public void setResScale(float scale) {
-        this.scale = scale;
-    }
-    Paint p = new Paint();
-
-    @Override
     protected void onDraw(Canvas canvas) {
-        if (movie != null) {
-            Log.d("GifView", x + " " + y + " " + scale);
-            canvas.save();
-            canvas.translate(x, y);
-            canvas.scale(scale, scale);
-            movie.setTime(
-                    (int) SystemClock.uptimeMillis() % movie.duration());
-            movie.draw(canvas, 0, 0);
-            p.setColor(Color.BLACK);
-            p.setStrokeWidth(2);
-            canvas.drawRect(0, 0, 20, 20, p);
-            canvas.restore();
-            invalidate();
-        }
+        gifNoView.onDraw(canvas);
+        invalidate();
     }
 }

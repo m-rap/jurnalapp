@@ -3,6 +3,7 @@ package com.mrap.jurnalapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Movie;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
@@ -89,12 +90,13 @@ public class JurnalActivity extends Activity {
         int width = util.getDisplaySize().x - 2 * margin;
 
         //SimpleDateFormat sdf = util.createSdf();
+        Movie progressMov = Movie.decodeStream(getResources().openRawResource(R.drawable.progress_orange));
 
         for (int i = 0, onGoingCount = 0, nOnGoingCount = 0; i < jurnal.aktivitases.size(); i++) {
             JnlAktivitas jnlAktivitas = jurnal.aktivitases.valueAt(i);
             ConstraintLayout aktivitasRoot = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.view_aktivitas, null);
 
-            refreshAktivitasView(jnlAktivitas, aktivitasRoot);
+            refreshAktivitasView(jnlAktivitas, aktivitasRoot, progressMov);
 
             if (jnlAktivitas.isOnGoing) {
 //                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -156,7 +158,7 @@ public class JurnalActivity extends Activity {
         }
     }
 
-    private void refreshAktivitasView(JnlAktivitas jnlAktivitas, ConstraintLayout aktivitasRoot) {
+    private void refreshAktivitasView(JnlAktivitas jnlAktivitas, ConstraintLayout aktivitasRoot, Movie progressMov) {
         Util util = new Util(this);
         SimpleDateFormat sdf = util.createSdf();
 
@@ -176,6 +178,9 @@ public class JurnalActivity extends Activity {
         AktivitasItem itemTerbaru = items.get(nAktItem - 1);
 
         AktivitasBar aktivitasBar = aktivitasRoot.findViewById(R.id.viewBar);
+        if (progressMov != null) {
+            aktivitasBar.setProgressMov(progressMov);
+        }
 
         if (jnlAktivitas.isOnGoing) {
             textView = aktivitasRoot.findViewById(R.id.txtMomen);
@@ -194,12 +199,13 @@ public class JurnalActivity extends Activity {
         aktivitasBar.invalidate();
 
         GifView gifView = aktivitasRoot.findViewById(R.id.viewBar2);
-        gifView.setRes(R.drawable.loading_bar);
+//        gifView.setRes(R.drawable.loading_bar);
+        gifView.getGifNoView().setRes(this, R.drawable.progress_orange);
         gifView.invalidate();
-        x = -239.0f; y = -182.0f;
-        scale = 3.4f;
-        gifView.setResPos(x, y);
-        gifView.setResScale(scale);
+//        x = -239.0f; y = -182.0f;
+//        scale = 3.4f;
+        gifView.getGifNoView().setResPos(x, y);
+        gifView.getGifNoView().setResScale(scale);
     }
 
     float x = 0;
@@ -322,7 +328,7 @@ public class JurnalActivity extends Activity {
                     aktivitas.closeChildrenDbs();
 
                     ConstraintLayout aktView = (ConstraintLayout)aktivitasViews.get(aktivitas.id);
-                    refreshAktivitasView(aktivitas, aktView);
+                    refreshAktivitasView(aktivitas, aktView, null);
                 }
             });
 
@@ -356,7 +362,7 @@ public class JurnalActivity extends Activity {
                                 }
 
                                 ConstraintLayout aktView = (ConstraintLayout)aktivitasViews.get(aktivitas.id);
-                                refreshAktivitasView(aktivitas, aktView);
+                                refreshAktivitasView(aktivitas, aktView, null);
                             }
                         });
                     } else if (code == ViewAktivitasFull.CB_CODE_REMOVE) {
@@ -365,7 +371,7 @@ public class JurnalActivity extends Activity {
                         aktivitas.closeChildrenDbs();
 
                         ConstraintLayout aktView = (ConstraintLayout)aktivitasViews.get(aktivitas.id);
-                        refreshAktivitasView(aktivitas, aktView);
+                        refreshAktivitasView(aktivitas, aktView, null);
                     }
                 }
             });

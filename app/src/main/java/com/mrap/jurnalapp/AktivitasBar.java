@@ -3,9 +3,11 @@ package com.mrap.jurnalapp;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Movie;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 //import android.util.Log;
+import android.util.Log;
 import android.widget.LinearLayout;
 //import android.widget.TextView;
 
@@ -17,13 +19,61 @@ import java.util.ArrayList;
 public class AktivitasBar extends LinearLayout {
     private static final String TAG = "AktivitasBar";
     public JnlAktivitas aktivitas = null;
+    GifNoView[] progressGifs = new GifNoView[] { new GifNoView() };
+    private int gifCount = 1;
+    Movie progressMov = null;
 
     public AktivitasBar(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public AktivitasBar(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+    }
+
+    public void setProgressMov(Movie m) {
+        progressMov = m;
+        progressGifs[0].setMovie(progressMov);
+
+        createGifPool(5);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int measuredWidth = getMeasuredWidth();
+
+        int gifWidth = progressGifs[0].getGifWidth();
+        gifCount = measuredWidth / gifWidth;
+        if (measuredWidth % gifWidth != 0) {
+            gifCount++;
+        }
+
+//        Log.d(TAG, "onMeasure " + measuredWidth / gifWidth + " " + measuredWidth % gifWidth + " " + gifCount);
+
+        if (gifCount == 0) {
+            return;
+        }
+
+        if (gifCount > progressGifs.length) {
+            createGifPool(gifCount);
+        }
+    }
+
+    private void createGifPool(int count) {
+        GifNoView temp = progressGifs[0];
+        int gifWidth = temp.getGifWidth();
+        Movie movie = temp.getMovie();
+
+        progressGifs = new GifNoView[count];
+        progressGifs[0] = temp;
+
+        int x = gifWidth;
+        for (int i = 1; i < count; i++, x += gifWidth) {
+            progressGifs[i] = new GifNoView();
+            progressGifs[i].setMovie(movie);
+            progressGifs[i].setResPos(x, 0);
+        }
     }
 
     @Override
@@ -31,12 +81,20 @@ public class AktivitasBar extends LinearLayout {
         //Log.d(TAG, "onDraw");
         if (aktivitas == null || aktivitas.isOnGoing) {
             super.onDraw(canvas);
+            for (int i = 0; i < gifCount; i++) {
+                progressGifs[i].onDraw(canvas);
+            }
+            invalidate();
             return;
         }
         int nAktItem = aktivitas.aktivitasItems.size();
         //Log.d(TAG, "n = " + nAktItem);
         if (nAktItem < 2) {
             super.onDraw(canvas);
+            for (int i = 0; i < gifCount; i++) {
+                progressGifs[i].onDraw(canvas);
+            }
+            invalidate();
             return;
         }
         ArrayList<AktivitasItem> items = new ArrayList<>();
