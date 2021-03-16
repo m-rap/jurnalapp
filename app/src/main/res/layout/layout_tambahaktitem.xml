@@ -59,6 +59,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/taktit_note" />
 
+    <com.mrap.jurnalapp.DateTimeField
+        android:id="@+id/datetimefield"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taktit_tanggal" />
+
+<!--    <DatePicker-->
+<!--        android:id="@+id/datepicker"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="200dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/datetimefield" />-->
+
+<!--    <TimePicker-->
+<!--        android:id="@+id/timepicker"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="200dp"-->
+<!--        android:timePickerMode="spinner"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/datepicker" />-->
+
     <Button
         android:id="@+id/taktit_btnSimpan"
         android:layout_width="wrap_content"
@@ -68,7 +93,7 @@
         android:layout_marginBottom="10dp"
         android:text="Simpan"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/taktit_tanggal" />
+        app:layout_constraintTop_toBottomOf="@+id/datetimefield" />
 
     <Button
         android:id="@+id/taktit_btnBatal"
