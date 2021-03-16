@@ -18,6 +18,9 @@ import java.util.ArrayList;
 
 public class AktivitasBar extends LinearLayout {
     private static final String TAG = "AktivitasBar";
+    private final Paint red;
+    private final Paint blue;
+    private final Paint black;
     public JnlAktivitas aktivitas = null;
     GifNoView[] progressGifs = new GifNoView[] { new GifNoView() };
     private int gifCount = 1;
@@ -29,6 +32,13 @@ public class AktivitasBar extends LinearLayout {
 
     public AktivitasBar(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        
+        red = new Paint();
+        black = new Paint();
+        blue = new Paint();
+        red.setColor(Color.parseColor("#ff0000"));
+        black.setColor(Color.parseColor("#000000"));
+        blue.setColor(Color.parseColor("#0000ff"));
     }
 
     public void setProgressMov(Movie m) {
@@ -80,7 +90,10 @@ public class AktivitasBar extends LinearLayout {
     protected void onDraw(Canvas canvas) {
         //Log.d(TAG, "onDraw");
         if (aktivitas == null || aktivitas.isOnGoing) {
-            super.onDraw(canvas);
+            //super.onDraw(canvas);
+            canvas.drawRect(0, 0, canvas.getWidth(), 10, red);
+            canvas.drawRect(0, 10, canvas.getWidth(), 20, blue);
+            canvas.drawRect(progressGifs[progressGifs.length - 1].getGifWidth(), 20, canvas.getWidth() - 20, 30, red);
             for (int i = 0; i < gifCount; i++) {
                 progressGifs[i].onDraw(canvas);
             }
@@ -90,7 +103,7 @@ public class AktivitasBar extends LinearLayout {
         int nAktItem = aktivitas.aktivitasItems.size();
         //Log.d(TAG, "n = " + nAktItem);
         if (nAktItem < 2) {
-            super.onDraw(canvas);
+            //super.onDraw(canvas);
             for (int i = 0; i < gifCount; i++) {
                 progressGifs[i].onDraw(canvas);
             }
@@ -107,11 +120,7 @@ public class AktivitasBar extends LinearLayout {
         float lineWidth = canvas.getWidth() - poinRadius * 2;
         float yStart = canvas.getHeight() / 2 - poinRadius;
         canvas.translate(0, yStart);
-        Paint paint = new Paint();
-        paint.setColor(Color.parseColor("#000000"));
-        Paint blue = new Paint();
-        blue.setColor(Color.parseColor("#0000FF"));
-        canvas.drawLine(poinRadius, poinRadius, poinRadius + lineWidth, poinRadius, paint);
+        canvas.drawLine(poinRadius, poinRadius, poinRadius + lineWidth, poinRadius, black);
         for (int i = 0; i < nAktItem; i++) {
             long t = items.get(i).tanggal.getTime() - startTime;
             float x = t * lineWidth / timeLength;

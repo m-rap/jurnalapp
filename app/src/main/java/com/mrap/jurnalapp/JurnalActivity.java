@@ -30,7 +30,6 @@ import java.util.Date;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.viewpager.widget.ViewPager;
 
 public class JurnalActivity extends Activity {
@@ -198,14 +197,14 @@ public class JurnalActivity extends Activity {
         aktivitasBar.aktivitas = jnlAktivitas;
         aktivitasBar.invalidate();
 
-        GifView gifView = aktivitasRoot.findViewById(R.id.viewBar2);
+//        GifView gifView = aktivitasRoot.findViewById(R.id.viewBar2);
 //        gifView.setRes(R.drawable.loading_bar);
-        gifView.getGifNoView().setRes(this, R.drawable.progress_orange);
-        gifView.invalidate();
+//        gifView.getGifNoView().setRes(this, R.drawable.progress_orange);
+//        gifView.invalidate();
 //        x = -239.0f; y = -182.0f;
 //        scale = 3.4f;
-        gifView.getGifNoView().setResPos(x, y);
-        gifView.getGifNoView().setResScale(scale);
+//        gifView.getGifNoView().setResPos(x, y);
+//        gifView.getGifNoView().setResScale(scale);
     }
 
     float x = 0;

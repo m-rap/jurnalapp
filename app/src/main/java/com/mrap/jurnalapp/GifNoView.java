@@ -2,7 +2,6 @@ package com.mrap.jurnalapp;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Movie;
 import android.graphics.Paint;
 import android.os.SystemClock;
@@ -45,17 +44,14 @@ public class GifNoView {
 
     public void onDraw(Canvas canvas) {
         if (movie != null) {
-//            Log.d("GifView", x + " " + y + " " + scale);
-//            canvas.save();
-            canvas.translate(x, y);
+            canvas.save();
+            //canvas.translate(x, y);
             canvas.scale(scale, scale);
             movie.setTime(
                     (int) SystemClock.uptimeMillis() % movie.duration());
-            movie.draw(canvas, 0, 0);
-//            p.setColor(Color.BLACK);
-//            p.setStrokeWidth(2);
-//            canvas.drawRect(0, 0, 20, 20, p);
-//            canvas.restore();
+            //movie.draw(canvas, 0, 0);
+            movie.draw(canvas, x, y);
+            canvas.restore();
         }
     }
 }
