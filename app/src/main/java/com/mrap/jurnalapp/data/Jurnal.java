@@ -180,18 +180,30 @@ public class Jurnal extends JnlData {
         }
     }
 
-    public void akhiriAktivitas(int itemId, Date tgl) {
-        dbAktivitas.execSQL("UPDATE aktivitas SET aktivitas_isongoing = ? WHERE aktivitas_id = ?", new String[] {"0", itemId + ""});
-        JnlAktivitas aktivitas = aktivitases.get(itemId);
+    public void akhiriAktivitas(int id, Date tgl) {
+        dbAktivitas.execSQL("UPDATE aktivitas SET aktivitas_isongoing = ? WHERE aktivitas_id = ?", new String[] {"0", id + ""});
+        JnlAktivitas aktivitas = aktivitases.get(id);
         if (aktivitas == null) {
-            aktivitas = getAktivitas(itemId);
-            //aktivitases.put(itemId, aktivitas);
+            aktivitas = getAktivitas(id);
         }
         aktivitas.isOnGoing = false;
         aktivitas.openChildrenDbs(dbFactory);
         aktivitas.tambahAktivitasItem("Selesai", "", tgl);
         aktivitas.closeChildrenDbs();
-        aktivitases.put(itemId, aktivitas);
+        aktivitases.put(id, aktivitas);
+    }
+
+    public void lanjutkanLagiAktivitas(int id) {
+        dbAktivitas.execSQL("UPDATE aktivitas SET aktivitas_isongoing = ? WHERE aktivitas_id = ?", new String[] {"1", id + ""});
+        JnlAktivitas aktivitas = aktivitases.get(id);
+        if (aktivitas == null) {
+            aktivitas = getAktivitas(id);
+        }
+        aktivitas.isOnGoing = true;
+        aktivitas.openChildrenDbs(dbFactory);
+        aktivitas.hapusAktivitasItemTerakhir();
+        aktivitas.closeChildrenDbs();
+        aktivitases.put(id, aktivitas);
     }
 
     public void hapusAktivitas(int itemId) {

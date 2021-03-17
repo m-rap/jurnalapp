@@ -94,6 +94,21 @@ public class JnlAktivitas extends JnlData {
         }
     }
 
+    public void hapusAktivitasItemTerakhir() {
+        Cursor c = dbAktivitasItem.rawQuery("SELECT * FROM aktivitas_item ORDER BY aktitem_tanggal DESC LIMIT 1", null);
+        if (!c.moveToFirst()) {
+            c.close();
+            return;
+        }
+
+        int idIdx = c.getColumnIndex("aktitem_id");
+        int aktItemId = c.getInt(idIdx);
+
+        c.close();
+
+        hapusAktivitasItem(aktItemId);
+    }
+
     public int getSortedAktItemsByDate(ArrayList<AktivitasItem> items, SparseArray<AktivitasItem> aktivitasItems) {
         int nAktItem = aktivitasItems.size();
         //Log.d(TAG, "nAktItem " + nAktItem);

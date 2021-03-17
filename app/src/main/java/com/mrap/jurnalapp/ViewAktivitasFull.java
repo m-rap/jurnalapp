@@ -98,24 +98,26 @@ public class ViewAktivitasFull {
                 textView.setText(aktItem.judul);
             }
 
+            View.OnClickListener editListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Object[] params = new Object[] {
+                            new ModalUtil.Callback() {
+                                @Override
+                                public void onCallback(int id, int code, Object[] params) {
+                                    refreshPaneAktItem();
+                                }
+                            }
+                    };
+                    callback.onCallback(aktItem.id, CB_CODE_EDIT, params);
+                }
+            };
+
             TableRow tr = new TableRow(that);
             if (i == 0) {
-                tr.addView(new View(that));
+                tr.addView(createEditRemoveBtn(that, editListener, null));
             } else {
-                tr.addView(createEditRemoveBtn(that, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Object[] params = new Object[] {
-                                new ModalUtil.Callback() {
-                                    @Override
-                                    public void onCallback(int id, int code, Object[] params) {
-                                        refreshPaneAktItem();
-                                    }
-                                }
-                        };
-                        callback.onCallback(aktItem.id, CB_CODE_EDIT, params);
-                    }
-                }, new View.OnClickListener() {
+                tr.addView(createEditRemoveBtn(that, editListener, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ViewConfirmation viewConfirmation = new ViewConfirmation();
@@ -150,15 +152,18 @@ public class ViewAktivitasFull {
         Button button = new Button(that);
         button.setText("Edit");
         button.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
-        linearLayout.addView(button);
         button.setOnClickListener(editListener);
 
-        button = new Button(that);
-        button.setText("Hapus");
-        button.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
-        button.setOnClickListener(removeListener);
-
         linearLayout.addView(button);
+
+        if (removeListener != null) {
+            button = new Button(that);
+            button.setText("Hapus");
+            button.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+            button.setOnClickListener(removeListener);
+
+            linearLayout.addView(button);
+        }
 
         return linearLayout;
     }

@@ -277,6 +277,8 @@ public class JurnalActivity extends Activity {
                 menu.add(0, aktId, 0, "Atur");
                 menu.add(0, aktId, 0, "Selesai");
             } else {
+                menu.add(0, aktId, 0, "Atur");
+                menu.add(0, aktId, 0, "Lanjutkan lagi");
                 menu.add(0, aktId, 0, "Hapus");
             }
         }
@@ -286,8 +288,17 @@ public class JurnalActivity extends Activity {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         boolean res = super.onContextItemSelected(item);
         if (item.getTitle().equals("Selesai")) {
-            jurnal.akhiriAktivitas(item.getItemId(), new Date());
-            refresh();
+            ConstraintLayout root = findViewById(R.id.jnl_root);
+            ViewTambahAktItem viewTambahAktItem = new ViewTambahAktItem();
+            viewTambahAktItem.showFinishModal(this, root, null, new ModalUtil.Callback() {
+                @Override
+                public void onCallback(int id, int code, Object[] params) {
+                    Date tanggal = (Date)params[2];
+
+                    jurnal.akhiriAktivitas(item.getItemId(), tanggal);
+                    refresh();
+                }
+            });
         } else if (item.getTitle().equals("Hapus")) {
             ViewConfirmation viewConfirmation = new ViewConfirmation();
             ConstraintLayout root = findViewById(R.id.jnl_root);
@@ -379,6 +390,9 @@ public class JurnalActivity extends Activity {
                     }
                 }
             });
+        } else if (item.getTitle().equals("Lanjutkan lagi")) {
+            jurnal.lanjutkanLagiAktivitas(item.getItemId());
+            refresh();
         }
         return res;
     }
