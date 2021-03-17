@@ -89,7 +89,7 @@ public class JurnalActivity extends Activity {
         int width = util.getDisplaySize().x - 2 * margin;
 
         //SimpleDateFormat sdf = util.createSdf();
-        Movie progressMov = Movie.decodeStream(getResources().openRawResource(R.drawable.progress_orange));
+        Movie progressMov = Movie.decodeStream(getResources().openRawResource(R.raw.progress_orange));
 
         for (int i = 0, onGoingCount = 0, nOnGoingCount = 0; i < jurnal.aktivitases.size(); i++) {
             JnlAktivitas jnlAktivitas = jurnal.aktivitases.valueAt(i);
@@ -226,10 +226,13 @@ public class JurnalActivity extends Activity {
         ModalUtil modalUtil = new ModalUtil();
         ConstraintLayout bgLayout = modalUtil.createModal(that, parent, layoutTambahAktivitas);
 
-        Util util = new Util(that);
-        SimpleDateFormat sdf = util.createSdf();
-        TextView textView = layoutTambahAktivitas.findViewById(R.id.takt_txtWaktu);
-        textView.setText(sdf.format(new Date()));
+//        Util util = new Util(that);
+//        SimpleDateFormat sdf = util.createSdf();
+//        TextView textView = layoutTambahAktivitas.findViewById(R.id.takt_txtWaktu);
+//        textView.setText(sdf.format(new Date()));
+
+        DateTimeField dateTimeField = layoutTambahAktivitas.findViewById(R.id.takt_txtWaktu);
+        dateTimeField.setDate(new Date());
 
         Button button = layoutTambahAktivitas.findViewById(R.id.takt_btnBatal);
         button.setOnClickListener(new View.OnClickListener() {
@@ -245,13 +248,15 @@ public class JurnalActivity extends Activity {
             public void onClick(View v) {
                 TextView textView = layoutTambahAktivitas.findViewById(R.id.takt_txtNama);
                 String nama = textView.getText().toString();
-                textView = layoutTambahAktivitas.findViewById(R.id.takt_txtWaktu);
-                String waktu = textView.getText().toString();
+//                textView = layoutTambahAktivitas.findViewById(R.id.takt_txtWaktu);
+//                String waktu = textView.getText().toString();
+                DateTimeField dateTimeField = layoutTambahAktivitas.findViewById(R.id.takt_txtWaktu);
                 try {
-                    Date date = sdf.parse(waktu);
+//                    Date date = sdf.parse(waktu);
+                    Date date = dateTimeField.getDate();
                     jurnal.tambahAktivitas(nama, date);
                     refresh();
-                } catch (ParseException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 parent.removeView(bgLayout);

@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,7 +15,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class DateTimeField extends LinearLayout {
     private Date date;
@@ -26,7 +26,7 @@ public class DateTimeField extends LinearLayout {
     public DateTimeField(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-        ConstraintLayout viewDateTime = (ConstraintLayout)LayoutInflater.from(context).inflate(R.layout.view_datetimefield, null);
+        ViewGroup viewDateTime = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.view_datetimefield, null);
         addView(viewDateTime);
 
         setDate(new Date());
@@ -46,7 +46,15 @@ public class DateTimeField extends LinearLayout {
         setArrowsOnClick(viewDateTime, 0, 59, Calendar.SECOND, R.id.btnUpSec, R.id.btnDownSec, R.id.txtSec);
     }
 
-    private void setValidateEvent(ConstraintLayout viewDateTime, int txtId, int mode, int min, int max) {
+    @Override
+    public void setOrientation(int orientation) {
+        super.setOrientation(orientation);
+
+        LinearLayout viewDateTime = (LinearLayout)getChildAt(0);
+        viewDateTime.setOrientation(orientation);
+    }
+
+    private void setValidateEvent(ViewGroup viewDateTime, int txtId, int mode, int min, int max) {
         EditText textView = viewDateTime.findViewById(txtId);
         textView.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
@@ -58,7 +66,7 @@ public class DateTimeField extends LinearLayout {
         });
     }
 
-    private void setArrowsOnClick(ConstraintLayout viewDateTime, int min, int max, int mode, int btnUpId, int btnDownId, int txtId) {
+    private void setArrowsOnClick(ViewGroup viewDateTime, int min, int max, int mode, int btnUpId, int btnDownId, int txtId) {
         ImageView imageView = viewDateTime.findViewById(btnUpId);
         imageView.setOnClickListener(new OnClickListener() {
             @Override
@@ -77,7 +85,7 @@ public class DateTimeField extends LinearLayout {
     }
 
     private void increaseField(int min, int max, int mode, int txtId) {
-        ConstraintLayout viewDateTime = (ConstraintLayout)getChildAt(0);
+        ViewGroup viewDateTime = (ViewGroup)getChildAt(0);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int value = calendar.get(mode) + 1;
@@ -86,16 +94,12 @@ public class DateTimeField extends LinearLayout {
         }
         calendar.set(mode, value);
         date = calendar.getTime();
-        TextView textView1 = viewDateTime.findViewById(txtId);
-        if (mode == Calendar.MONTH) {
-            textView1.setText((value + 1) + "");
-        } else {
-            textView1.setText(value + "");
-        }
+
+        setTextValue(max, mode, txtId, viewDateTime, value);
     }
 
     private void decreaseField(int min, int max, int mode, int txtId) {
-        ConstraintLayout viewDateTime = (ConstraintLayout)getChildAt(0);
+        ViewGroup viewDateTime = (ViewGroup)getChildAt(0);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int value = calendar.get(mode) - 1;
@@ -104,11 +108,28 @@ public class DateTimeField extends LinearLayout {
         }
         calendar.set(mode, value);
         date = calendar.getTime();
-        TextView textView1 = viewDateTime.findViewById(txtId);
+
+        setTextValue(max, mode, txtId, viewDateTime, value);
+    }
+
+    private void setTextValue(int max, int mode, int txtId, ViewGroup viewDateTime, int value) {
+        EditText textView1 = viewDateTime.findViewById(txtId);
+
+        setTextValue(max, mode, value, textView1);
+    }
+
+    private void setTextValue(int max, int mode, int value, EditText textView1) {
+        int displayValue;
         if (mode == Calendar.MONTH) {
-            textView1.setText((value + 1) + "");
+            displayValue = value + 1;
         } else {
-            textView1.setText(value + "");
+            displayValue = value;
+        }
+
+        if (max <= 99) {
+            textView1.setText(String.format("%02d", displayValue));
+        } else if (max <= 9999) {
+            textView1.setText(String.format("%04d", displayValue));
         }
     }
 
@@ -116,24 +137,18 @@ public class DateTimeField extends LinearLayout {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int value = calendar.get(mode);
+        int displayValue;
         try {
             value = Integer.parseInt(t.getText().toString()) - 1;
             if (value < min || value > max) {
-                if (mode == Calendar.MONTH) {
-                    t.setText((calendar.get(mode) + 1) + "");
-                } else {
-                    t.setText(calendar.get(mode) + "");
-                }
+                value = calendar.get(mode);
+            } else {
                 calendar.set(mode, value);
                 date = calendar.getTime();
             }
-        } catch (Exception ex) {
-            if (mode == Calendar.MONTH) {
-                t.setText((value + 1) + "");
-            } else {
-                t.setText(value + "");
-            }
-        }
+        } catch (Exception ex) { }
+
+        setTextValue(max, mode, value, t);
     }
 
     public void setDate(Date date) {
@@ -144,22 +159,22 @@ public class DateTimeField extends LinearLayout {
 
         View viewDateTime = getChildAt(0);
         EditText textView = viewDateTime.findViewById(R.id.txtDate);
-        textView.setText(calendar.get(Calendar.DATE) + "");
+        textView.setText(String.format("%02d", calendar.get(Calendar.DATE)));
 
         textView = viewDateTime.findViewById(R.id.txtMon);
-        textView.setText((calendar.get(Calendar.MONTH) + 1) + "");
+        textView.setText(String.format("%02d", calendar.get(Calendar.MONTH) + 1));
 
         textView = viewDateTime.findViewById(R.id.txtYear);
-        textView.setText(calendar.get(Calendar.YEAR) + "");
+        textView.setText(String.format("%04d", calendar.get(Calendar.YEAR)));
 
         textView = viewDateTime.findViewById(R.id.txtHour);
-        textView.setText(calendar.get(Calendar.HOUR_OF_DAY) + "");
+        textView.setText(String.format("%02d", calendar.get(Calendar.HOUR_OF_DAY)));
 
         textView = viewDateTime.findViewById(R.id.txtMin);
-        textView.setText(calendar.get(Calendar.MINUTE) + "");
+        textView.setText(String.format("%02d", calendar.get(Calendar.MINUTE)));
 
         textView = viewDateTime.findViewById(R.id.txtSec);
-        textView.setText(calendar.get(Calendar.SECOND) + "");
+        textView.setText(String.format("%02d", calendar.get(Calendar.SECOND)));
     }
 
     public Date getDate() throws Exception {

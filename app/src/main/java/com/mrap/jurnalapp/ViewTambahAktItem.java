@@ -22,12 +22,15 @@ public class ViewTambahAktItem {
         ConstraintLayout bgLayout = modalUtil.createModal(that, root, layoutTambahAktitem);
 
         Util util = new Util(that);
-        SimpleDateFormat sdf = util.createSdf();
+//        SimpleDateFormat sdf = util.createSdf();
 
         TextView textView;
+        DateTimeField dateTimeField = layoutTambahAktitem.findViewById(R.id.taktit_datetimefield);
         if (aktItem == null) {
-            textView = layoutTambahAktitem.findViewById(R.id.taktit_tanggal);
-            textView.setText(sdf.format(new Date()));
+//            textView = layoutTambahAktitem.findViewById(R.id.taktit_tanggal);
+//            textView.setText(sdf.format(new Date()));
+
+            dateTimeField.setDate(new Date());
 
         } else {
             textView = layoutTambahAktitem.findViewById(R.id.taktit_txtJudul);
@@ -36,8 +39,10 @@ public class ViewTambahAktItem {
             textView = layoutTambahAktitem.findViewById(R.id.taktit_note);
             textView.setText(aktItem.note);
 
-            textView = layoutTambahAktitem.findViewById(R.id.taktit_tanggal);
-            textView.setText(sdf.format(aktItem.tanggal));
+//            textView = layoutTambahAktitem.findViewById(R.id.taktit_tanggal);
+//            textView.setText(sdf.format(aktItem.tanggal));
+
+            dateTimeField.setDate(aktItem.tanggal);
         }
 
         Button button = layoutTambahAktitem.findViewById(R.id.taktit_btnBatal);
@@ -58,18 +63,20 @@ public class ViewTambahAktItem {
                 textView1 = layoutTambahAktitem.findViewById(R.id.taktit_note);
                 String note = textView1.getText().toString();
 
-                textView1 = layoutTambahAktitem.findViewById(R.id.taktit_tanggal);
+//                textView1 = layoutTambahAktitem.findViewById(R.id.taktit_tanggal);
+                DateTimeField dateTimeField = layoutTambahAktitem.findViewById(R.id.taktit_datetimefield);
                 try {
-                    Date tanggal = sdf.parse(textView1.getText().toString());
+//                    Date tanggal = sdf.parse(textView1.getText().toString());
+                    Date tanggal = dateTimeField.getDate();
                     if (aktItem == null) {
                         callback.onCallback(-1, -1, new Object[]{judul, note, tanggal});
                     } else {
                         callback.onCallback(aktItem.id, -1, new Object[]{judul, note, tanggal});
                     }
-                } catch (ParseException e) {
+                    root.removeView(bgLayout);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                root.removeView(bgLayout);
             }
         });
     }

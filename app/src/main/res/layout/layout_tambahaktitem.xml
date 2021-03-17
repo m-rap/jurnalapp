@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#ffffff">
@@ -45,27 +46,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/taktit_txtJudul" />
 
-    <EditText
-        android:id="@+id/taktit_tanggal"
-        android:layout_width="0dp"
+    <com.mrap.jurnalapp.DateTimeField
+        android:id="@+id/taktit_datetimefield"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:ems="10"
-        android:hint="Waktu"
-        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/taktit_note" />
-
-    <com.mrap.jurnalapp.DateTimeField
-        android:id="@+id/datetimefield"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/taktit_tanggal" />
 
 <!--    <DatePicker-->
 <!--        android:id="@+id/datepicker"-->
@@ -93,7 +81,7 @@
         android:layout_marginBottom="10dp"
         android:text="Simpan"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/datetimefield" />
+        app:layout_constraintTop_toBottomOf="@+id/taktit_datetimefield" />
 
     <Button
         android:id="@+id/taktit_btnBatal"

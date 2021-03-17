@@ -26,16 +26,14 @@
         app:layout_constraintEnd_toStartOf="@+id/takt_btnTambah"
         app:layout_constraintTop_toTopOf="@+id/takt_btnTambah" />
 
-    <EditText
+    <com.mrap.jurnalapp.DateTimeField
         android:id="@+id/takt_txtWaktu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
