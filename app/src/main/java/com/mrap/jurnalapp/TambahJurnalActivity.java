@@ -20,7 +20,7 @@ import com.mrap.jurnalapp.data.DbFactory;
 import com.mrap.jurnalapp.data.Jurnal;
 import com.mrap.jurnalapp.data.JurnalStyle;
 
-public class TambahJurnalActivity extends Activity {
+public class TambahJurnalActivity extends JnlActivity {
 
     private static final String TAG = "TambahJurnalActivity";
     int selectedCover = 0;

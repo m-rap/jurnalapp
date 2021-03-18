@@ -31,7 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends JnlActivity {
     private static final String TAG = "HomeActivity";
 
     Album album = null;
@@ -39,32 +39,9 @@ public class HomeActivity extends Activity {
 
     SparseArray<View> jnlViewMap = new SparseArray<>();
 
-//    @Override
-//    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
-//            // update overrideConfiguration with your locale
-//            // setLocale(overrideConfiguration) // you will need to implement this
-//            Log.d(TAG, "load locale in applyOverrideConfiguration");
-//            Util util = new Util(this);
-//            util.loadLocale(overrideConfiguration); // you will need to implement this
-//        }
-//        super.applyOverrideConfiguration(overrideConfiguration);
-//    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        Util util = new Util(base);
-        super.attachBaseContext(util.loadLocale(null));
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            Util util = new Util(this);
-            util.loadLocale(null);
-        }
 
         setContentView(R.layout.layout_home);
 

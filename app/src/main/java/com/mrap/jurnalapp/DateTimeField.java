@@ -51,7 +51,9 @@ public class DateTimeField extends LinearLayout {
         super.setOrientation(orientation);
 
         LinearLayout viewDateTime = (LinearLayout)getChildAt(0);
-        viewDateTime.setOrientation(orientation);
+        if (viewDateTime != null) {
+            viewDateTime.setOrientation(orientation);
+        }
     }
 
     private void setValidateEvent(ViewGroup viewDateTime, int txtId, int mode, int min, int max) {

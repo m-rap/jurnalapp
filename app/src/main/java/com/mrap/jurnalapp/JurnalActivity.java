@@ -32,7 +32,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 
-public class JurnalActivity extends Activity {
+public class JurnalActivity extends JnlActivity {
 
     private static final String TAG = "JurnalActivity";
     DbFactory dbFactory = null;
