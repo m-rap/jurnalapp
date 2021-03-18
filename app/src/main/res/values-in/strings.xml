@@ -1,0 +1,32 @@
+<resources>
+    <string name="appName">Jurnal</string>
+    <string name="jurnalAlbum">Album jurnal</string>
+    <string name="addJurnal">Tambah jurnal</string>
+    <string name="title">Judul</string>
+    <string name="name">Nama</string>
+    <string name="pagerIndicator">1 dari 1</string>
+    <string name="addAktItem">Tambah momen</string>
+    <string name="save">Simpan</string>
+    <string name="cancel">Batal</string>
+    <string name="add">Tambah</string>
+    <string name="startTime">Waktu mulai</string>
+    <string name="aktivitasName">Nama aktivitas</string>
+    <string name="addAktivitas">Tambah aktivitas</string>
+    <string name="coverStyle">Style cover</string>
+    <string name="backgroundColor">Warna background</string>
+    <string name="exm_dateWithoutYear">6 Mar</string>
+    <string name="exm_time">10:00</string>
+    <string name="exm_title">Judul</string>
+    <string name="exm_note">Note</string>
+    <string name="started">Dimulai</string>
+    <string name="exm_date">3 Maret 2021</string>
+    <string name="recentMoment">Momen terbaru</string>
+    <string name="back">Kembali</string>
+    <string name="ok">OK</string>
+    <string name="yesDeleteJurnal">Ya, hapus jurnal</string>
+    <string name="deleteJnlAktConfirmation">Apakah Anda yakin menghapus aktivitas %1$s?</string>
+    <string name="deleteJurnalConfirmation">Apakah Anda yakin menghapus jurnal %1$s?</string>
+    <string name="exm_lang">id</string>
+    <string name="chooseLang">Pilih bahasa</string>
+    <string name="deleteAktItemConfirmation">Hapus %1$s?</string>
+</resources>

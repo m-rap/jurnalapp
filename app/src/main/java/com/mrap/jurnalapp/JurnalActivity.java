@@ -74,7 +74,7 @@ public class JurnalActivity extends Activity {
     }
 
     private void refresh() {
-        jurnal.loadAktivitas(dbFactory);
+        jurnal.loadAktivitas();
 
         //LinearLayout viewOnGoing = findViewById(R.id.viewOnGoing);
         LinearLayout viewListAktivitas = findViewById(R.id.viewListAktivitas);
@@ -159,10 +159,10 @@ public class JurnalActivity extends Activity {
 
     private void refreshAktivitasView(JnlAktivitas jnlAktivitas, ConstraintLayout aktivitasRoot, Movie progressMov) {
         Util util = new Util(this);
-        SimpleDateFormat sdf = util.createSdf();
+        SimpleDateFormat sdf = new SimpleDateFormat(getResources().getString(R.string.sdf1));
 
         jnlAktivitas.openChildrenDbs(dbFactory);
-        jnlAktivitas.loadAktivitasItems(dbFactory);
+        jnlAktivitas.loadAktivitasItems();
         jnlAktivitas.closeChildrenDbs();
 
         TextView textView = aktivitasRoot.findViewById(R.id.txtNama);
@@ -304,8 +304,8 @@ public class JurnalActivity extends Activity {
             ConstraintLayout root = findViewById(R.id.jnl_root);
             JnlAktivitas aktivitas = jurnal.aktivitases.get(item.getItemId());
 
-            viewConfirmation.showModal(this, root, "Apakah Anda yakin menghapus aktivitas " + aktivitas.nama + "?",
-                    false, new ModalUtil.Callback() {
+            viewConfirmation.showModal(this, root, getString(R.string.deleteJnlAktConfirmation, aktivitas.nama),
+                    false, null, new ModalUtil.Callback() {
                         @Override
                         public void onCallback(int id, int code, Object[] params) {
                             if (code == ViewConfirmation.CODE_OK) {

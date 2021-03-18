@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.util.SparseArray;
 
+import com.mrap.jurnalapp.R;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public class JnlAktivitas extends JnlData {
     private SQLiteDatabase dbAktivitasItem = null;
     private DbFactory dbFactory = null;
 
-    public void loadAktivitasItems(DbFactory dbFactory) {
+    public void loadAktivitasItems() {
         Cursor c = dbAktivitasItem.rawQuery("SELECT * FROM aktivitas_item", null);
         if (!c.moveToFirst()) {
             c.close();
@@ -35,7 +37,7 @@ public class JnlAktivitas extends JnlData {
         int idxId = c.getColumnIndex("aktitem_id");
         int idxTanggal = c.getColumnIndex("aktitem_tanggal");
         int idxJudul = c.getColumnIndex("aktitem_judul");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat(dbFactory.getContext().getString(R.string.sdf1));
         do {
             AktivitasItem item = new AktivitasItem();
             item.id = c.getInt(idxId);

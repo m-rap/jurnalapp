@@ -21,14 +21,14 @@
             android:id="@+id/aktit_tanggal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="6 Mar" />
+            android:text="@string/exm_dateWithoutYear" />
 
         <TextView
             android:id="@+id/aktit_jam"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10:00"
-            android:textSize="10sp" />
+            android:text="@string/exm_time"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <TextView
@@ -38,7 +38,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="3dp"
         android:layout_marginEnd="10dp"
-        android:text="Judul"
+        android:text="@string/exm_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/linearLayout"
@@ -53,7 +53,7 @@
         android:layout_marginBottom="3dp"
         android:inputType="textMultiLine"
         android:minLines="2"
-        android:text="Note"
+        android:text="@string/exm_note"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

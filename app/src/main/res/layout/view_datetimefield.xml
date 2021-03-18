@@ -23,21 +23,21 @@
                 android:id="@+id/textView10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="dd"
+                android:text="@string/hint_date"
                 android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/textView12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="MM"
+                android:text="@string/hint_month"
                 android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/textView13"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="yyyy"
+                android:text="@string/hint_year"
                 android:textAlignment="center" />
         </TableRow>
 
@@ -143,21 +143,21 @@
                 android:id="@+id/textView14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="HH"
+                android:text="@string/hint_hour"
                 android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/textView15"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="mm"
+                android:text="@string/hint_minute"
                 android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/textView16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ss"
+                android:text="@string/hint_second"
                 android:textAlignment="center" />
         </TableRow>
 

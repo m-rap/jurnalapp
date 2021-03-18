@@ -3,15 +3,23 @@ package com.mrap.jurnalapp;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Insets;
 import android.graphics.Point;
 import android.os.Build;
+import android.util.Log;
 import android.view.WindowInsets;
 import android.view.WindowMetrics;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class Util {
+    private static final String TAG = "Util";
     private Context context;
 
     public Util(Context context) {
@@ -45,7 +53,49 @@ public class Util {
         return size;
     }
 
-    public SimpleDateFormat createSdf() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public void loadLocale(Configuration config) {
+        try {
+            FileInputStream fis = new FileInputStream(context.getExternalFilesDir(null) + "/lang.txt");
+            byte[] buff = new byte[1048];
+            int len = fis.read(buff, 0, buff.length);
+            String languageCode = new String(buff, 0, len);
+            applyLocale(languageCode, config);
+            fis.close();
+            Log.d(TAG, "locale loaded " + languageCode);
+        } catch (Exception e) {
+            saveLocale("in", config);
+        }
+    }
+
+    public void saveLocale(String languageCode, Configuration config) {
+        applyLocale(languageCode, config);
+        try {
+            PrintWriter printWriter = new PrintWriter(context.getExternalFilesDir(null) + "/lang.txt");
+            printWriter.print(languageCode);
+            printWriter.close();
+            Log.d(TAG, "locale saved " + languageCode);
+        } catch (FileNotFoundException e) { }
+
+    }
+
+    private void applyLocale(String languageCode, Configuration config) {
+        Log.d(TAG, "apply locale " + languageCode);
+        Locale locale = new Locale(languageCode);
+        //Locale.setDefault(locale);
+        Resources resources = context.getResources();
+        if (config == null)
+            config = resources.getConfiguration();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            Log.d(TAG, "setLocale " + locale);
+            config.setLocale(locale);
+        } else{
+            Log.d(TAG, "locale = " + locale);
+            config.locale = locale;
+        }
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N){
+            context.getApplicationContext().createConfigurationContext(config);
+        } else {
+            resources.updateConfiguration(config, resources.getDisplayMetrics());
+        }
     }
 }

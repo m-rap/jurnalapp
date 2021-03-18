@@ -2,6 +2,8 @@ package com.mrap.jurnalapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
@@ -22,6 +24,7 @@ import com.mrap.jurnalapp.data.Jurnal;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,12 +39,40 @@ public class HomeActivity extends Activity {
     SparseArray<View> jnlViewMap = new SparseArray<>();
 
     @Override
+    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+            // update overrideConfiguration with your locale
+            // setLocale(overrideConfiguration) // you will need to implement this
+            Log.d(TAG, "load locale in applyOverrideConfiguration");
+            Util util = new Util(this);
+            util.loadLocale(overrideConfiguration); // you will need to implement this
+        }
+        super.applyOverrideConfiguration(overrideConfiguration);
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Util util = new Util(this);
+        util.loadLocale(null);
+
         setContentView(R.layout.layout_home);
 
         dbFactory = new DbFactory(this, getExternalFilesDir(null).getPath());
         album = new Album();
+
+        TextView textView = findViewById(R.id.home_txtLang);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openContextMenu(textView);
+            }
+        });
+        registerForContextMenu(textView);
+
+        Locale current = getResources().getConfiguration().locale;
+        Log.d(TAG, "current locale " + current + " " + current.getLanguage() + " " + current.getCountry());
     }
 
     @Override
@@ -143,6 +174,14 @@ public class HomeActivity extends Activity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+
+        TextView textView = findViewById(R.id.home_txtLang);
+        if (v == textView) {
+            menu.setHeaderTitle(getString(R.string.chooseLang));
+            menu.add(1, 0, 0, "id");
+            menu.add(1, 1, 0, "en");
+            return;
+        }
         int jurnalId = jnlViewMap.keyAt(jnlViewMap.indexOfValue(v));
         menu.setHeaderTitle("Menu " + album.jurnals.get(jurnalId).judul);
         menu.add(0, jurnalId, 0, "Hapus");
@@ -151,13 +190,25 @@ public class HomeActivity extends Activity {
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         boolean res = super.onContextItemSelected(item);
+
+        if (item.getGroupId() == 1) {
+            Util util = new Util(this);
+            int id = item.getItemId();
+            if (id == 0) {
+                util.saveLocale("in", null);
+            } else if (id == 1) {
+                util.saveLocale("en", null);
+            }
+            return res;
+        }
+
         int id = item.getItemId();
         Log.d(TAG, "context menu item " + item.getTitle() + " " + id);
         if (item.getTitle().equals("Hapus")) {
             ViewConfirmation viewConfirmation = new ViewConfirmation();
             ConstraintLayout root = findViewById(R.id.home_root);
-            viewConfirmation.showModal(this, root, "Apakah Anda yakin menghapus jurnal " + album.jurnals.get(id).judul + "?",
-                    true, new ModalUtil.Callback() {
+            viewConfirmation.showModal(this, root, getString(R.string.deleteJurnalConfirmation, album.jurnals.get(id).judul),
+                    true, getString(R.string.yesDeleteJurnal), new ModalUtil.Callback() {
                 @Override
                 public void onCallback(int callbackId, int code, Object[] params) {
                     if (code == ViewConfirmation.CODE_OK) {

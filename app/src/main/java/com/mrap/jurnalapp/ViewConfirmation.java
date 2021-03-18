@@ -13,11 +13,11 @@ public class ViewConfirmation {
     public static int CODE_OK = 0;
     public static int CODE_CANCEL = -1;
 
-    public void showModal(Activity that, ConstraintLayout root, boolean usingCheck, ModalUtil.Callback callback) {
-        showModal(that, root, null, usingCheck, callback);
+    public void showModal(Activity that, ConstraintLayout root, boolean usingCheck, String checkText, ModalUtil.Callback callback) {
+        showModal(that, root, null, usingCheck, checkText, callback);
     }
 
-    public void showModal(Activity that, ConstraintLayout root, String message, boolean usingCheck, ModalUtil.Callback callback) {
+    public void showModal(Activity that, ConstraintLayout root, String message, boolean usingCheck, String checkText, ModalUtil.Callback callback) {
         ConstraintLayout viewConfirmation = (ConstraintLayout) LayoutInflater.from(that).inflate(R.layout.view_confirmation, null);
         ModalUtil modalUtil = new ModalUtil();
         ConstraintLayout bgLayout = modalUtil.createModal(that, root, viewConfirmation);
@@ -27,9 +27,11 @@ public class ViewConfirmation {
             textView.setText(message);
         }
 
+        CheckBox checkBox = viewConfirmation.findViewById(R.id.cnf_check);
         if (!usingCheck) {
-            CheckBox checkBox = viewConfirmation.findViewById(R.id.cnf_check);
             checkBox.setVisibility(View.GONE);
+        } else {
+            checkBox.setText(checkText);
         }
 
         Button button = viewConfirmation.findViewById(R.id.cnf_btnOk);

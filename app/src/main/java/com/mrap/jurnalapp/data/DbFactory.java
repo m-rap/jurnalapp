@@ -15,6 +15,10 @@ public class DbFactory {
         this.rootPath = rootPath;
     }
 
+    public Context getContext() {
+        return context;
+    }
+
     public SQLiteDatabase getDbJurnal() {
         SQLiteOpenHelper sqLiteOpenHelper = new SQLiteOpenHelper(context, rootPath + "/jurnal.db", null, 1) {
             @Override

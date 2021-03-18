@@ -25,7 +25,7 @@ public class Jurnal extends JnlData {
     private SQLiteDatabase dbAttr = null;
     private DbFactory dbFactory = null;
 
-    public void loadAktivitas(DbFactory dbFactory) {
+    public void loadAktivitas() {
         Cursor c = dbAktivitas.rawQuery("SELECT * FROM aktivitas", null);
         if (!c.moveToFirst()) {
             c.close();

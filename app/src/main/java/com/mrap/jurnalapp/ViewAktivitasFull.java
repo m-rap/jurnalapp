@@ -19,8 +19,6 @@ import com.mrap.jurnalapp.data.JnlAktivitas;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class ViewAktivitasFull {
     private static final String TAG = "ViewAktivitasFull";
@@ -121,8 +119,8 @@ public class ViewAktivitasFull {
                     @Override
                     public void onClick(View v) {
                         ViewConfirmation viewConfirmation = new ViewConfirmation();
-                        viewConfirmation.showModal(that, root, "Hapus " + aktItem.judul + "?",
-                                false, new ModalUtil.Callback() {
+                        viewConfirmation.showModal(that, root, that.getString(R.string.deleteAktItemConfirmation, aktItem.judul),
+                                false, null, new ModalUtil.Callback() {
                                     @Override
                                     public void onCallback(int id, int code, Object[] params) {
                                         if (code == ViewConfirmation.CODE_OK) {
