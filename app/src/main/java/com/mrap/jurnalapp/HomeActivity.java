@@ -68,9 +68,7 @@ public class HomeActivity extends JnlActivity {
         album.openChildrenDbs(dbFactory);
         album.loadJurnals();
 
-//        FlexboxLayout layout = findViewById(R.id.jurnal_container);
         FlowLayout layout = findViewById(R.id.jurnal_container);
-//        layout.removeAllViews();
         jnlViewMap.clear();
 
         Util util = new Util(this);
@@ -81,14 +79,12 @@ public class HomeActivity extends JnlActivity {
             jurnal.openChildrenDbs(dbFactory);
             jurnal.loadStyle();
             ConstraintLayout jnlView = createJurnalIcon(jurnal);
-//            FlexboxLayout.LayoutParams lp = new FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.topMargin = margin;
             lp.leftMargin = margin;
             lp.rightMargin = margin;
             lp.bottomMargin = margin;
             jnlView.setLayoutParams(lp);
-//            layout.addView(jnlView);
             jnlViewMap.put(jurnal.id, jnlView);
 
             HomeActivity that = this;
@@ -107,36 +103,10 @@ public class HomeActivity extends JnlActivity {
         getWindow().getDecorView().post(new Runnable() {
             @Override
             public void run() {
-//                consistentSpaceBetweenUntilLastLine(layout);
                 layout.setContents(jnlViewMap);
             }
         });
     }
-
-//    public void consistentSpaceBetweenUntilLastLine(FlexboxLayout layout) {
-//        List<FlexLine> flexLines = layout.getFlexLines();
-//        Iterator<FlexLine> it = flexLines.iterator();
-//        if (flexLines.size() > 1) {
-//            FlexLine flexLine = it.next();
-////            Log.d(TAG,  "fi " + flexLine.getFirstIndex() + " c " + flexLine.getItemCount() +
-////                    " ms " + flexLine.getMainSize() + " ps " + layout.getWidth() +
-////                    " gr " + flexLine.getTotalFlexGrow() + " sr " + flexLine.getTotalFlexShrink() +
-////                    " cs " + flexLine.getCrossSize());
-//            float targetMargin = (float)(layout.getWidth() - flexLine.getMainSize()) / (flexLine.getItemCount() - 1);
-//            int lineItemCount = flexLine.getItemCount();
-//            int childCount = layout.getChildCount();
-////            Log.d(TAG, "targetMargin " + targetMargin + " lineItemCount " + lineItemCount + " childCount " + childCount);
-//            for (int i = 0; i < childCount; i++) {
-//                if ((i + 1) % lineItemCount == 0) {
-//                    continue;
-//                }
-//                View v = layout.getChildAt(i);
-//                FlexboxLayout.LayoutParams lp = (FlexboxLayout.LayoutParams)v.getLayoutParams();
-//                lp.rightMargin += targetMargin;
-//                v.setLayoutParams(lp);
-//            }
-//        }
-//    }
 
     @Override
     protected void onPause() {
@@ -170,7 +140,8 @@ public class HomeActivity extends JnlActivity {
         }
         int jurnalId = jnlViewMap.keyAt(jnlViewMap.indexOfValue(v));
         menu.setHeaderTitle("Menu " + album.jurnals.get(jurnalId).judul);
-        menu.add(0, jurnalId, 0, "Hapus");
+        menu.add(0, jurnalId, 0, R.string.menu_edit);
+        menu.add(0, jurnalId, 0, R.string.menu_delete);
     }
 
     @Override
@@ -192,7 +163,7 @@ public class HomeActivity extends JnlActivity {
 
         int id = item.getItemId();
         Log.d(TAG, "context menu item " + item.getTitle() + " " + id);
-        if (item.getTitle().equals("Hapus")) {
+        if (item.getTitle().equals(getString(R.string.menu_delete))) {
             ViewConfirmation viewConfirmation = new ViewConfirmation();
             ConstraintLayout root = findViewById(R.id.home_root);
             viewConfirmation.showModal(this, root, getString(R.string.deleteJurnalConfirmation, album.jurnals.get(id).judul),
@@ -204,6 +175,10 @@ public class HomeActivity extends JnlActivity {
                     }
                 }
             });
+        } else if (item.getTitle().equals(getString(R.string.menu_edit))) {
+            Intent intent = new Intent(this, TambahJurnalActivity.class);
+            intent.putExtra("id", id);
+            startActivity(intent);
         }
         return res;
     }
@@ -230,6 +205,7 @@ public class HomeActivity extends JnlActivity {
 
     public void onClickTambahJurnal(View view) {
         Intent intent = new Intent(this, TambahJurnalActivity.class);
+        intent.putExtra("id", -1);
         startActivity(intent);
     }
 }

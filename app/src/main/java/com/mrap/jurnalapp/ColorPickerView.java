@@ -7,12 +7,14 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 // reference: https://stackoverflow.com/questions/6980906/android-color-picker by Robo and JRowan
 
 public class ColorPickerView extends View {
+    private static final String TAG = "ColorPickerView";
     private int colorPadSize = 0;
     private int currWidth = 0;
     private int currHeight = 0;
@@ -47,50 +49,12 @@ public class ColorPickerView extends View {
         // color field
         float[] hsv = new float[3];
         Color.colorToHSV(color, hsv);
-        //mCurrentHue = hsv[0];
-        mCurrentHue = 0;
+        mCurrentHue = hsv[0];
+
+        updateHueColors();
         updateMainColors();
 
         mCurrentColor = color;
-
-        // Initialize the colors of the hue slider bar
-        int index = 0;
-        for (float i = 0; i < 256; i += 256 / 42) // Red (#f00) to pink
-        // (#f0f)
-        {
-            mHueBarColors[index] = Color.rgb(255, 0, (int) i);
-            index++;
-        }
-        for (float i = 0; i < 256; i += 256 / 42) // Pink (#f0f) to blue
-        // (#00f)
-        {
-            mHueBarColors[index] = Color.rgb(255 - (int) i, 0, 255);
-            index++;
-        }
-        for (float i = 0; i < 256; i += 256 / 42) // Blue (#00f) to light
-        // blue (#0ff)
-        {
-            mHueBarColors[index] = Color.rgb(0, (int) i, 255);
-            index++;
-        }
-        for (float i = 0; i < 256; i += 256 / 42) // Light blue (#0ff) to
-        // green (#0f0)
-        {
-            mHueBarColors[index] = Color.rgb(0, 255, 255 - (int) i);
-            index++;
-        }
-        for (float i = 0; i < 256; i += 256 / 42) // Green (#0f0) to yellow
-        // (#ff0)
-        {
-            mHueBarColors[index] = Color.rgb((int) i, 255, 0);
-            index++;
-        }
-        for (float i = 0; i < 256; i += 256 / 42) // Yellow (#ff0) to red
-        // (#f00)
-        {
-            mHueBarColors[index] = Color.rgb(255, 255 - (int) i, 0);
-            index++;
-        }
 
         // Initializes the Paint that will draw the View
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -103,96 +67,19 @@ public class ColorPickerView extends View {
         if (mCurrentHue >= 0 && mCurrentHue < mHueBarColors.length) {
             return mHueBarColors[(int)mCurrentHue];
         }
-//        int translatedHue = 255 - (int) (mCurrentHue * 255 / 360);
-//        int index = 0;
-//        for (float i = 0; i < 256; i += 256 / 42) {
-//            if (index == translatedHue)
-//                return Color.rgb(255, 0, (int) i);
-//            index++;
-//        }
-//        for (float i = 0; i < 256; i += 256 / 42) {
-//            if (index == translatedHue)
-//                return Color.rgb(255 - (int) i, 0, 255);
-//            index++;
-//        }
-//        for (float i = 0; i < 256; i += 256 / 42) {
-//            if (index == translatedHue)
-//                return Color.rgb(0, (int) i, 255);
-//            index++;
-//        }
-//        for (float i = 0; i < 256; i += 256 / 42) {
-//            if (index == translatedHue)
-//                return Color.rgb(0, 255, 255 - (int) i);
-//            index++;
-//        }
-//        for (float i = 0; i < 256; i += 256 / 42) {
-//            if (index == translatedHue)
-//                return Color.rgb((int) i, 255, 0);
-//            index++;
-//        }
-//        for (float i = 0; i < 256; i += 256 / 42) {
-//            if (index == translatedHue)
-//                return Color.rgb(255, 255 - (int) i, 0);
-//            index++;
-//        }
         return Color.RED;
     }
 
-    // Update the main field colors depending on the current selected hue
-    private void updateMainColors() {
-        int mainColor = getCurrentMainColor();
-        int index = 0;
-        //int[] topColors = new int[256];
-        int[] topColors = new int[colorPadSize];
-        int len = colorPadSize * colorPadSize;
-        if (len > mMainColors.length) {
-            mMainColors = new int[len];
-        }
-        //for (int y = 0; y < 256; y++) {
-        for (int y = 0; y < colorPadSize; y++) {
-            //for (int x = 0; x < 256; x++) {
-            for (int x = 0; x < colorPadSize; x++) {
-                if (y == 0) {
-//                    mMainColors[index] = Color.rgb(
-//                            255 - (255 - Color.red(mainColor)) * x / 255,
-//                            255 - (255 - Color.green(mainColor)) * x / 255,
-//                            255 - (255 - Color.blue(mainColor)) * x / 255);
-                    mMainColors[index] = Color.rgb(
-                            255 - (255 - Color.red(mainColor)) * x / colorPadSize,
-                            255 - (255 - Color.green(mainColor)) * x / colorPadSize,
-                            255 - (255 - Color.blue(mainColor)) * x / colorPadSize);
-                    topColors[x] = mMainColors[index];
-                } else
-//                    mMainColors[index] = Color.rgb(
-//                            (255 - y) * Color.red(topColors[x]) / 255,
-//                            (255 - y) * Color.green(topColors[x]) / 255,
-//                            (255 - y) * Color.blue(topColors[x]) / 255);
-                    mMainColors[index] = Color.rgb(
-                            (colorPadSize - 1 - y) * Color.red(topColors[x]) / colorPadSize,
-                            (colorPadSize - 1 - y) * Color.green(topColors[x]) / colorPadSize,
-                            (colorPadSize - 1 - y) * Color.blue(topColors[x]) / colorPadSize);
-                index++;
-            }
-        }
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        setMeasuredDimension(276, 366);
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        currWidth = getMeasuredWidth();
-        currHeight = getMeasuredHeight();
-        colorPadSize = currHeight - 50;
-        if (colorPadSize < 0) {
-            colorPadSize = 0;
-        }
-        if (currWidth < colorPadSize) {
-            colorPadSize = currWidth;
-        }
+    private void updateHueColors() {
+        float[] hsv = new float[3];
+        Color.colorToHSV(mCurrentColor, hsv);
+        mCurrentHue = hsv[0] * currWidth / 360;
 
         int x = 0;
         int segmentLength = currWidth / 6;
-        mHueBarColors = new int[currWidth];
+        if (currWidth > mHueBarColors.length) {
+            mHueBarColors = new int[currWidth];
+        }
         for (int i = 0; i < segmentLength; i++, x++) // Red (#f00) to pink (#f0f)
         {
             mHueBarColors[x] = Color.rgb(255, 0, (int)(i * 256 / segmentLength));
@@ -220,8 +107,73 @@ public class ColorPickerView extends View {
         for (; x < currWidth; x++) {
             mHueBarColors[x] = Color.rgb(0, 0, 0);
         }
+    }
 
+    // Update the main field colors depending on the current selected hue
+    private void updateMainColors() {
+        int mainColor = getCurrentMainColor();
+        int index = 0;
+        //int[] topColors = new int[256];
+        int[] topColors = new int[colorPadSize];
+        int len = colorPadSize * colorPadSize;
+        if (len > mMainColors.length) {
+            mMainColors = new int[len];
+        }
+        //for (int y = 0; y < 256; y++) {
+        for (int y = 0; y < colorPadSize; y++) {
+            //for (int x = 0; x < 256; x++) {
+            for (int x = 0; x < colorPadSize; x++) {
+                if (y == 0) {
+//                    mMainColors[index] = Color.rgb(
+//                            255 - (255 - Color.red(mainColor)) * x / 255,
+//                            255 - (255 - Color.green(mainColor)) * x / 255,
+//                            255 - (255 - Color.blue(mainColor)) * x / 255);
+                    mMainColors[index] = Color.rgb(
+                            255 - (255 - Color.red(mainColor)) * x / colorPadSize,
+                            255 - (255 - Color.green(mainColor)) * x / colorPadSize,
+                            255 - (255 - Color.blue(mainColor)) * x / colorPadSize);
+                    topColors[x] = mMainColors[index];
+                } else {
+//                    mMainColors[index] = Color.rgb(
+//                            (255 - y) * Color.red(topColors[x]) / 255,
+//                            (255 - y) * Color.green(topColors[x]) / 255,
+//                            (255 - y) * Color.blue(topColors[x]) / 255);
+                    mMainColors[index] = Color.rgb(
+                            (colorPadSize - 1 - y) * Color.red(topColors[x]) / colorPadSize,
+                            (colorPadSize - 1 - y) * Color.green(topColors[x]) / colorPadSize,
+                            (colorPadSize - 1 - y) * Color.blue(topColors[x]) / colorPadSize);
+                }
+
+
+//                if (mMainColors[index] == mCurrentColor) {
+//                    colorPadY = y;
+//                    colorPadX = x;
+//
+//                    //Log.d(TAG, "found colorpad x y " + colorPadX + " " + colorPadY + " " + mMainColors[index] + " " + mCurrentColor);
+//                }
+
+                index++;
+            }
+        }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        currWidth = getMeasuredWidth();
+        currHeight = getMeasuredHeight();
+        colorPadSize = currHeight - 50;
+        if (colorPadSize < 0) {
+            colorPadSize = 0;
+        }
+        if (currWidth < colorPadSize) {
+            colorPadSize = currWidth;
+        }
+
+        updateHueColors();
         updateMainColors();
+
+//        invalidate();
     }
 
     @Override
@@ -388,5 +340,26 @@ public class ColorPickerView extends View {
 
     int getCurrentColor() {
         return mCurrentColor;
+    }
+
+    void setCurrentColor(int color) {
+        mCurrentColor = color;
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        mCurrentHue = hsv[0] * currWidth / 360;
+
+        updateMainColors();
+
+        int index = 0;
+        int len = colorPadSize * colorPadSize;
+
+        for (; index < len; index++) {
+            if (mMainColors[index] == mCurrentColor) {
+                colorPadY = index / colorPadSize;
+                colorPadX = index % colorPadSize;
+            }
+        }
+
+        invalidate();
     }
 }

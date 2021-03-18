@@ -83,6 +83,28 @@ public class Album extends JnlData {
         jurnal.closeChildrenDbs();
     }
 
+    public void editJurnal(Jurnal jurnal) {
+        try {
+            dbJurnal.execSQL("UPDATE jurnal SET jurnal_judul = ?, jurnal_tipecover = ?, jurnal_tipebg = ? WHERE jurnal_id = ?", new String[]{
+                    jurnal.judul, jurnal.tipeCover + "", jurnal.tipeBg + ""
+            });
+            Jurnal j = jurnals.get(jurnal.id);
+            if (j == null) {
+                j = jurnal;
+                jurnals.put(jurnal.id, jurnal);
+            }
+            j.judul = jurnal.judul;
+            j.tipeCover = jurnal.tipeCover;
+            j.tipeBg = jurnal.tipeBg;
+
+            jurnal.openChildrenDbs(dbFactory);
+            jurnal.saveStyle();
+            jurnal.closeChildrenDbs();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean deleteJurnal(int id) {
         try {
             dbJurnal.execSQL("DELETE FROM jurnal WHERE jurnal_id = ?", new String[]{id + ""});

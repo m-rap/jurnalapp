@@ -10,6 +10,7 @@
     <string name="appName">Journal</string>
     <string name="jurnalAlbum">Journal album</string>
     <string name="addJurnal">Add journal</string>
+    <string name="editJurnal">Edit journal</string>
     <string name="title">Title</string>
     <string name="pagerIndicator">1 of 1</string>
     <string name="addAktItem">Add Moment</string>
@@ -37,4 +38,6 @@
     <string name="exm_lang">en</string>
     <string name="chooseLang">Choose language</string>
     <string name="deleteAktItemConfirmation">Delete %1$s?</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_delete">Delete</string>
 </resources>
