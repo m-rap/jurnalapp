@@ -53,32 +53,33 @@ public class Util {
         return size;
     }
 
-    public void loadLocale(Configuration config) {
+    public Context loadLocale(Configuration config) {
         try {
             FileInputStream fis = new FileInputStream(context.getExternalFilesDir(null) + "/lang.txt");
             byte[] buff = new byte[1048];
             int len = fis.read(buff, 0, buff.length);
             String languageCode = new String(buff, 0, len);
-            applyLocale(languageCode, config);
+            Context context1 = applyLocale(languageCode, config);
             fis.close();
             Log.d(TAG, "locale loaded " + languageCode);
+            return context1;
         } catch (Exception e) {
-            saveLocale("in", config);
+            return saveLocale("in", config);
         }
     }
 
-    public void saveLocale(String languageCode, Configuration config) {
-        applyLocale(languageCode, config);
+    public Context saveLocale(String languageCode, Configuration config) {
+        Context context1 = applyLocale(languageCode, config);
         try {
             PrintWriter printWriter = new PrintWriter(context.getExternalFilesDir(null) + "/lang.txt");
             printWriter.print(languageCode);
             printWriter.close();
             Log.d(TAG, "locale saved " + languageCode);
         } catch (FileNotFoundException e) { }
-
+        return context1;
     }
 
-    private void applyLocale(String languageCode, Configuration config) {
+    private Context applyLocale(String languageCode, Configuration config) {
         Log.d(TAG, "apply locale " + languageCode);
         Locale locale = new Locale(languageCode);
         //Locale.setDefault(locale);
@@ -92,10 +93,11 @@ public class Util {
             Log.d(TAG, "locale = " + locale);
             config.locale = locale;
         }
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N){
-            context.getApplicationContext().createConfigurationContext(config);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            return context.getApplicationContext().createConfigurationContext(config);
         } else {
             resources.updateConfiguration(config, resources.getDisplayMetrics());
+            return context;
         }
     }
 }

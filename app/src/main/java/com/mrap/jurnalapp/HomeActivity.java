@@ -1,6 +1,7 @@
 package com.mrap.jurnalapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -38,24 +39,32 @@ public class HomeActivity extends Activity {
 
     SparseArray<View> jnlViewMap = new SparseArray<>();
 
+//    @Override
+//    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+//            // update overrideConfiguration with your locale
+//            // setLocale(overrideConfiguration) // you will need to implement this
+//            Log.d(TAG, "load locale in applyOverrideConfiguration");
+//            Util util = new Util(this);
+//            util.loadLocale(overrideConfiguration); // you will need to implement this
+//        }
+//        super.applyOverrideConfiguration(overrideConfiguration);
+//    }
+
     @Override
-    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
-            // update overrideConfiguration with your locale
-            // setLocale(overrideConfiguration) // you will need to implement this
-            Log.d(TAG, "load locale in applyOverrideConfiguration");
-            Util util = new Util(this);
-            util.loadLocale(overrideConfiguration); // you will need to implement this
-        }
-        super.applyOverrideConfiguration(overrideConfiguration);
+    protected void attachBaseContext(Context base) {
+        Util util = new Util(base);
+        super.attachBaseContext(util.loadLocale(null));
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Util util = new Util(this);
-        util.loadLocale(null);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            Util util = new Util(this);
+            util.loadLocale(null);
+        }
 
         setContentView(R.layout.layout_home);
 
@@ -196,8 +205,10 @@ public class HomeActivity extends Activity {
             int id = item.getItemId();
             if (id == 0) {
                 util.saveLocale("in", null);
+                recreate();
             } else if (id == 1) {
                 util.saveLocale("en", null);
+                recreate();
             }
             return res;
         }
