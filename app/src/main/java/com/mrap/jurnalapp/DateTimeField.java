@@ -26,7 +26,8 @@ public class DateTimeField extends LinearLayout {
     public DateTimeField(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-        ViewGroup viewDateTime = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.view_datetimefield, null);
+        LinearLayout viewDateTime = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.view_datetimefield, null);
+        viewDateTime.setOrientation(getOrientation());
         addView(viewDateTime);
 
         setDate(new Date());
