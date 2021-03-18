@@ -306,61 +306,36 @@ public class ColorPickerView extends View {
 //                mPaint);
     }
 
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        setMeasuredDimension(276, 366);
-//    }
+    final static int ACTION_NONE = 0;
+    final static int ACTION_HUE = 1;
+    final static int ACTION_COLORPAD = 2;
+
+    int currentTouchAction = ACTION_NONE;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() != MotionEvent.ACTION_DOWN)
-            return true;
         float x = event.getX();
         float y = event.getY();
 
         boolean changed = false;
 
-        // If the touch event is located in the hue bar
-        //if (x > 10 && x < 266 && y > 0 && y < 40) {
-        if (y > 0 && y < 40) {
-            // Update the main field colors
-            //mCurrentHue = (255 - x) * 360 / 255;
-            mCurrentHue = x;
-            updateMainColors();
-
-            // Update the current selected color
-            //int transX = mCurrentX - 10;
-            //int transY = mCurrentY - 60;
-            //int index = 256 * (transY - 1) + transX;
-            int index = colorPadSize * (colorPadY - 1) + colorPadX;
-            if (index > 0 && index < mMainColors.length)
-                mCurrentColor = mMainColors[index];
-
-            // Force the redraw of the dialog
-            //invalidate();
-
-            changed = true;
-        }
-
-        // If the touch event is located in the main field
-        //if (x > 10 && x < 266 && y > 50 && y < 306) {
-        if (y >= 50) {
-            colorPadX = (int) x;
-            if (colorPadX >= colorPadSize) {
-                colorPadX = colorPadSize - 1;
+        int action = event.getAction() & MotionEvent.ACTION_MASK;
+        if (action == MotionEvent.ACTION_DOWN) {
+            if (y > 0 && y < 40) {
+                currentTouchAction = ACTION_HUE;
+                changed = doActionHue(x);
             }
-            colorPadY = (int) y - 50;
-            if (colorPadY >= colorPadSize) {
-                colorPadY = colorPadSize - 1;
+            if (y >= 50) {
+                currentTouchAction = ACTION_COLORPAD;
+                changed = doActionColorpad((int) x, (int) y);
             }
-            int index = colorPadSize * (colorPadY) + colorPadX;
-            if (index > 0 && index < mMainColors.length) {
-                // Update the current color
-                mCurrentColor = mMainColors[index];
-                // Force the redraw of the dialog
-                //invalidate();
-
-                changed = true;
+        } else if (action == MotionEvent.ACTION_UP) {
+            currentTouchAction = ACTION_NONE;
+        } else if (action == MotionEvent.ACTION_MOVE) {
+            if (currentTouchAction == ACTION_HUE) {
+                changed = doActionHue(x);
+            } else if (currentTouchAction == ACTION_COLORPAD) {
+                changed = doActionColorpad((int) x, (int) y);
             }
         }
 
@@ -368,20 +343,48 @@ public class ColorPickerView extends View {
             invalidate();
         }
 
-        // If the touch event is located in the left button, notify the
-        // listener with the current color
-        //if (mListener != null && x > 10 && x < 138 && y > 316 && y < 356)
         if (mListener != null && changed) {
             mListener.colorChanged("", mCurrentColor);
         }
 
-        // If the touch event is located in the right button, notify the
-        // listener with the default color
-//        if (mListener != null && x > 138 && x < 266 && y > 316 && y < 356)
-//            mListener.colorChanged("", mDefaultColor);
-
         return true;
     }
+
+    private boolean doActionColorpad(int x, int y) {
+        colorPadX = x;
+        if (colorPadX >= colorPadSize) {
+            colorPadX = colorPadSize - 1;
+        }
+        colorPadY = y - 50;
+        if (colorPadY >= colorPadSize) {
+            colorPadY = colorPadSize - 1;
+        }
+        int index = colorPadSize * (colorPadY) + colorPadX;
+        if (index < 0) {
+            index = 0;
+        }
+        if (index >= mMainColors.length) {
+            index = mMainColors.length - 1;
+        }
+        mCurrentColor = mMainColors[index];
+        return true;
+    }
+
+    private boolean doActionHue(float x) {
+        mCurrentHue = x;
+        updateMainColors();
+
+        int index = colorPadSize * (colorPadY - 1) + colorPadX;
+        if (index < 0) {
+            index = 0;
+        }
+        if (index >= mMainColors.length) {
+            index = mMainColors.length - 1;
+        }
+        mCurrentColor = mMainColors[index];
+        return true;
+    }
+
 
     int getCurrentColor() {
         return mCurrentColor;

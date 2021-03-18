@@ -90,10 +90,6 @@ public class AktivitasBar extends LinearLayout {
     protected void onDraw(Canvas canvas) {
         //Log.d(TAG, "onDraw");
         if (aktivitas == null || aktivitas.isOnGoing) {
-            //super.onDraw(canvas);
-            canvas.drawRect(0, 0, canvas.getWidth(), 10, red);
-            canvas.drawRect(0, 10, canvas.getWidth(), 20, blue);
-            canvas.drawRect(progressGifs[progressGifs.length - 1].getGifWidth(), 20, canvas.getWidth() - 20, 30, red);
             for (int i = 0; i < gifCount; i++) {
                 progressGifs[i].onDraw(canvas);
             }
@@ -103,7 +99,6 @@ public class AktivitasBar extends LinearLayout {
         int nAktItem = aktivitas.aktivitasItems.size();
         //Log.d(TAG, "n = " + nAktItem);
         if (nAktItem < 2) {
-            //super.onDraw(canvas);
             for (int i = 0; i < gifCount; i++) {
                 progressGifs[i].onDraw(canvas);
             }
