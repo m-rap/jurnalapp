@@ -129,6 +129,28 @@ public class JurnalActivity extends JnlActivity {
 
     private void refreshOnGoingPane() {
         ViewPager viewOnGoing2 = findViewById(R.id.viewOnGoing2);
+
+        TextView pagerIndicator = findViewById(R.id.jnl_txtOnGoingPagerIndicator);
+        pagerIndicator.setText(getString(R.string.pagerIndicator, 1, aktivitasViewsOnGoing.size()));
+
+        viewOnGoing2.clearOnPageChangeListeners();
+        viewOnGoing2.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                pagerIndicator.setText(getString(R.string.pagerIndicator, position + 1, aktivitasViewsOnGoing.size()));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         viewOnGoing2.setAdapter(new JnlPagerAdapter(this, aktivitasViewsOnGoing));
 
         ConstraintLayout viewOnGoingWrap2 = findViewById(R.id.viewOnGoingWrap2);

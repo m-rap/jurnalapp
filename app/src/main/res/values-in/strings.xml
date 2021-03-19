@@ -5,7 +5,7 @@
     <string name="editJurnal">Edit jurnal</string>
     <string name="title">Judul</string>
     <string name="name">Nama</string>
-    <string name="pagerIndicator">1 dari 1</string>
+    <string name="pagerIndicator">%1$d dari %2$d</string>
     <string name="addAktItem">Tambah momen</string>
     <string name="save">Simpan</string>
     <string name="cancel">Batal</string>
