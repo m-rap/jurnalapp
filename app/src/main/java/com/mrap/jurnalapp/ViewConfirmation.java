@@ -13,11 +13,11 @@ public class ViewConfirmation {
     public static int CODE_OK = 0;
     public static int CODE_CANCEL = -1;
 
-    public void showModal(Activity that, ConstraintLayout root, boolean usingCheck, String checkText, ModalUtil.Callback callback) {
+    public void showModal(JnlActivity that, ConstraintLayout root, boolean usingCheck, String checkText, ModalUtil.Callback callback) {
         showModal(that, root, null, usingCheck, checkText, callback);
     }
 
-    public void showModal(Activity that, ConstraintLayout root, String message, boolean usingCheck, String checkText, ModalUtil.Callback callback) {
+    public void showModal(JnlActivity that, ConstraintLayout root, String message, boolean usingCheck, String checkText, ModalUtil.Callback callback) {
         ConstraintLayout viewConfirmation = (ConstraintLayout) LayoutInflater.from(that).inflate(R.layout.view_confirmation, null);
         ModalUtil modalUtil = new ModalUtil();
         ConstraintLayout bgLayout = modalUtil.createModal(that, root, viewConfirmation);
@@ -42,13 +42,15 @@ public class ViewConfirmation {
                     CheckBox checkBox = viewConfirmation.findViewById(R.id.cnf_check);
                     if (checkBox.isChecked()) {
                         callback.onCallback(-1, CODE_OK, null);
-                        root.removeView(bgLayout);
+//                        root.removeView(bgLayout);
+                        modalUtil.removeModal(that, bgLayout);
                     } else {
                         checkBox.requestFocus();
                     }
                 } else {
                     callback.onCallback(-1, CODE_OK, null);
-                    root.removeView(bgLayout);
+//                    root.removeView(bgLayout);
+                    modalUtil.removeModal(that, bgLayout);
                 }
             }
         });
@@ -58,7 +60,8 @@ public class ViewConfirmation {
             @Override
             public void onClick(View v) {
                 callback.onCallback(-1, CODE_CANCEL, null);
-                root.removeView(bgLayout);
+//                root.removeView(bgLayout);
+                modalUtil.removeModal(that, bgLayout);
             }
         });
     }

@@ -238,7 +238,8 @@ public class JurnalActivity extends JnlActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parent.removeView(bgLayout);
+//                parent.removeView(bgLayout);
+                modalUtil.removeModal(that, bgLayout);
             }
         });
 
@@ -259,7 +260,8 @@ public class JurnalActivity extends JnlActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                parent.removeView(bgLayout);
+//                parent.removeView(bgLayout);
+                modalUtil.removeModal(that, bgLayout);
             }
         });
     }

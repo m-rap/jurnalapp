@@ -26,13 +26,13 @@ public class ViewAktivitasFull {
     public static final int CB_CODE_EDIT = 0;
     public static final int CB_CODE_REMOVE = 1;
 
-    private Activity that;
+    private JnlActivity that;
     private ConstraintLayout root;
     JnlAktivitas jnlAktivitas;
     ModalUtil.Callback callback;
     ConstraintLayout aktiFull;
 
-    public void showModal(Activity that, ConstraintLayout root, JnlAktivitas jnlAktivitas, ModalUtil.Callback callback) {
+    public void showModal(JnlActivity that, ConstraintLayout root, JnlAktivitas jnlAktivitas, ModalUtil.Callback callback) {
         this.that = that;
         this.root = root;
         this.jnlAktivitas = jnlAktivitas;
@@ -46,7 +46,8 @@ public class ViewAktivitasFull {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                root.removeView(bgLayout);
+//                root.removeView(bgLayout);
+                modalUtil.removeModal(that, bgLayout);
             }
         });
 

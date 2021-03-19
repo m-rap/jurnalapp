@@ -1,6 +1,5 @@
 package com.mrap.jurnalapp;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +16,7 @@ public class ModalUtil {
         public void onCallback(int id, int code, Object[] params);
     }
 
-    public ConstraintLayout createModal(Activity that, ConstraintLayout root, ConstraintLayout content) {
+    public ConstraintLayout createModal(JnlActivity that, ConstraintLayout root, ConstraintLayout content) {
         Util util = new Util(that);
         ConstraintLayout bgLayout = new ConstraintLayout(that);
         bgLayout.setId(View.generateViewId());
@@ -54,6 +53,32 @@ public class ModalUtil {
         constraintSet2.connect(content.getId(), ConstraintSet.RIGHT, bgLayout.getId(), ConstraintSet.RIGHT);
         constraintSet2.connect(content.getId(), ConstraintSet.BOTTOM, bgLayout.getId(), ConstraintSet.BOTTOM);
         constraintSet2.applyTo(bgLayout);
+
+        that.modals.add(bgLayout);
+        that.roots.add(root);
+//        Log.d(TAG, "added modal " + bgLayout + " " + that.modals.size());
+
         return bgLayout;
+    }
+
+    public void removeModal(JnlActivity that, int i) {
+        for (int j = that.modals.size() - 1; j >= i; j--) {
+            View modal = that.modals.get(j);
+//            ((ViewGroup) modal.getRootView()).removeView(modal);
+            that.roots.get(i).removeView(modal);
+            that.modals.remove(j);
+            that.roots.remove(j);
+        }
+    }
+
+    public void removeModal(JnlActivity that, View modal) {
+        for (int i = that.modals.size() - 1; i >= 0; i--) {
+            View m = that.modals.get(i);
+//            Log.d(TAG, "removeModal check " + m + " " + modal);
+            if (that.modals.get(i) == modal) {
+                removeModal(that, i);
+                return;
+            }
+        }
     }
 }

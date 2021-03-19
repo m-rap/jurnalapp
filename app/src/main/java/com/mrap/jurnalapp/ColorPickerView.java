@@ -339,8 +339,8 @@ public class ColorPickerView extends View {
 //        mCurrentHue = hsv[0] * currWidth / 360;
         mCurrentHue = hsv[0];
 
-        Log.d(TAG, String.format("current color %d %d %d hsv %f %f %f", Color.red(color), Color.green(color),
-                Color.blue(color), hsv[0], hsv[1], hsv[2]));
+//        Log.d(TAG, String.format("current color %d %d %d hsv %f %f %f", Color.red(color), Color.green(color),
+//                Color.blue(color), hsv[0], hsv[1], hsv[2]));
 
         updateMainColors();
 

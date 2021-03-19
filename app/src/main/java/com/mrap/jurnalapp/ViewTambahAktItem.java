@@ -16,7 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class ViewTambahAktItem {
 
-    private ConstraintLayout showModalInternal(Activity that, ConstraintLayout root, AktivitasItem aktItem, ModalUtil.Callback callback) {
+    private ConstraintLayout showModalInternal(JnlActivity that, ConstraintLayout root, AktivitasItem aktItem, ModalUtil.Callback callback) {
         ConstraintLayout layoutTambahAktItem = (ConstraintLayout) LayoutInflater.from(that).inflate(R.layout.layout_tambahaktitem, null);
         ModalUtil modalUtil = new ModalUtil();
         ConstraintLayout bgLayout = modalUtil.createModal(that, root, layoutTambahAktItem);
@@ -49,7 +49,8 @@ public class ViewTambahAktItem {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                root.removeView(bgLayout);
+//                root.removeView(bgLayout);
+                modalUtil.removeModal(that, bgLayout);
             }
         });
 
@@ -73,7 +74,8 @@ public class ViewTambahAktItem {
                     } else {
                         callback.onCallback(aktItem.id, -1, new Object[]{judul, note, tanggal});
                     }
-                    root.removeView(bgLayout);
+//                    root.removeView(bgLayout);
+                    modalUtil.removeModal(that, bgLayout);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -83,7 +85,7 @@ public class ViewTambahAktItem {
         return layoutTambahAktItem;
     }
 
-    public void showFinishModal(Activity that, ConstraintLayout root, AktivitasItem aktItem, ModalUtil.Callback callback) {
+    public void showFinishModal(JnlActivity that, ConstraintLayout root, AktivitasItem aktItem, ModalUtil.Callback callback) {
         ConstraintLayout layoutTambahAktitem = showModalInternal(that, root, aktItem, callback);
 
         TextView textView1 = layoutTambahAktitem.findViewById(R.id.taktit_pagetitle);
@@ -97,7 +99,7 @@ public class ViewTambahAktItem {
         textView1.setVisibility(View.GONE);
     }
 
-    public void showModal(Activity that, ConstraintLayout root, AktivitasItem aktItem, ModalUtil.Callback callback) {
+    public void showModal(JnlActivity that, ConstraintLayout root, AktivitasItem aktItem, ModalUtil.Callback callback) {
         showModalInternal(that, root, aktItem, callback);
     }
 }
