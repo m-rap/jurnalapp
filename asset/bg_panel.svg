@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="40mm"
+   height="62mm"
+   viewBox="0 0 40 62"
+   version="1.1"
+   id="svg3133"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3130" />
+  <g
+     id="layer1">
+    <g
+       id="g1886"
+       transform="matrix(1.0000015,0,0,0.99999958,-70.129971,-117.69432)"
+       style="stroke-width:0.999994">
+      <rect
+         style="fill:#fffbf6;fill-opacity:1;stroke:none;stroke-width:0.502708;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect15339"
+         width="36.052429"
+         height="58.052437"
+         x="72.103622"
+         y="119.66818" />
+      <rect
+         style="fill:#f2d6ac;fill-opacity:1;stroke:#d5b98e;stroke-width:0.265001;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect15377"
+         width="39.735001"
+         height="1.8412869"
+         x="70.262337"
+         y="117.8269" />
+      <rect
+         style="fill:#f2d6ac;fill-opacity:1;stroke:#d5b98e;stroke-width:0.265001;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect1337"
+         width="58.052429"
+         height="1.8412869"
+         x="119.66818"
+         y="-72.103622"
+         transform="rotate(90)" />
+      <rect
+         style="fill:#f2d6ac;fill-opacity:1;stroke:#d5b98e;stroke-width:0.265001;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect1543"
+         width="39.735001"
+         height="1.8412869"
+         x="70.262337"
+         y="177.72061" />
+      <rect
+         style="fill:#f2d6ac;fill-opacity:1;stroke:#d5b98e;stroke-width:0.265001;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect1545"
+         width="58.052429"
+         height="1.8412869"
+         x="119.66818"
+         y="-109.99734"
+         transform="rotate(90)" />
+    </g>
+  </g>
+</svg>
