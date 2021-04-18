@@ -54,7 +54,11 @@ public class AktivitasBar extends LinearLayout {
         int measuredWidth = getMeasuredWidth();
 
         int gifWidth = progressGifs[0].getGifWidth();
-        gifCount = measuredWidth / gifWidth;
+        if (gifWidth > 0) {
+            gifCount = measuredWidth / gifWidth;
+        } else {
+            gifCount = 1;
+        }
         if (measuredWidth % gifWidth != 0) {
             gifCount++;
         }
@@ -105,8 +109,11 @@ public class AktivitasBar extends LinearLayout {
             invalidate();
             return;
         }
-        ArrayList<AktivitasItem> items = new ArrayList<>();
-        aktivitas.getSortedAktItemsByDate(items, aktivitas.aktivitasItems);
+//        ArrayList<AktivitasItem> items = new ArrayList<>();
+//        aktivitas.getSortedAktItemsByDate(items, aktivitas.aktivitasItems);
+
+        ArrayList<AktivitasItem> items = aktivitas.getStortedAktItemsByDate();
+
         Util util = new Util(getContext());
         float poinRadius = (int)util.convertDipToPix(5);
         long startTime = items.get(0).tanggal.getTime();

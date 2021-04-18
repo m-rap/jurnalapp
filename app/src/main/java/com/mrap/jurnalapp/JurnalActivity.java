@@ -1,11 +1,10 @@
 package com.mrap.jurnalapp;
 
-import android.app.Activity;
+import android.animation.TimeAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Movie;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -22,9 +21,9 @@ import com.mrap.jurnalapp.data.DbFactory;
 import com.mrap.jurnalapp.data.JnlAktivitas;
 import com.mrap.jurnalapp.data.Jurnal;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import androidx.annotation.NonNull;
@@ -40,6 +39,7 @@ public class JurnalActivity extends JnlActivity {
 
     SparseArray<View> aktivitasViews = new SparseArray<>();
     SparseArray<View> aktivitasViewsOnGoing = new SparseArray<>();
+    SparseArray<JnlAktivitas> aktivitasOnGoing = new SparseArray<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,6 +83,7 @@ public class JurnalActivity extends JnlActivity {
         viewListAktivitas.removeAllViews();
         aktivitasViews.clear();
         aktivitasViewsOnGoing.clear();
+        aktivitasOnGoing.clear();
 
         Util util = new Util(this);
         int margin = (int)util.convertDipToPix(10);
@@ -103,6 +104,7 @@ public class JurnalActivity extends JnlActivity {
 //                aktivitasRoot.setLayoutParams(lp);
 //                viewOnGoing.addView(aktivitasRoot);
                 aktivitasViewsOnGoing.put(jnlAktivitas.id, aktivitasRoot);
+                aktivitasOnGoing.put(jnlAktivitas.id, jnlAktivitas);
 
                 onGoingCount++;
             } else {
@@ -127,7 +129,57 @@ public class JurnalActivity extends JnlActivity {
         refreshOnGoingPane();
     }
 
+    TimeAnimator stopwatchAnim = null;
+    TextView lblStopwatch = null;
+    int ongoingAktIndex = -1;
+
     private void refreshOnGoingPane() {
+        stopwatchAnim = new TimeAnimator();
+        stopwatchAnim.setTimeListener(new TimeAnimator.TimeListener() {
+            @Override
+            public void onTimeUpdate(TimeAnimator animation, long totalTime, long deltaTime) {
+                if (ongoingAktIndex == -1 || lblStopwatch == null) {
+                    return;
+                }
+
+                JnlAktivitas jnlAktivitas = aktivitasOnGoing.valueAt(ongoingAktIndex);
+                ArrayList<AktivitasItem> items = jnlAktivitas.getStortedAktItemsByDate();
+
+                if (items == null || items.size() == 0) {
+                    return;
+                }
+
+                Date started = items.get(0).tanggal;
+                long msElapsed = Calendar.getInstance().getTime().getTime() - started.getTime();
+
+                long sec = msElapsed / 1000;
+                long ms = msElapsed % 1000;
+                long min = sec / 60;
+                sec = sec % 60;
+                long hour = min / 60;
+                min = min % 60;
+                long day = hour / 24;
+                hour = hour % 24;
+                long week = day / 7;
+                day = day % 7;
+
+                String text;
+                if (hour > 0) {
+                    text = String.format("%02d:%02d:%02d", hour, min, sec);
+                } else {
+                    text = String.format("%02d:%02d.%03d", min, sec, ms);
+                }
+                if (day > 0) {
+                    text = day + " day " + text;
+                }
+                if (week > 0) {
+                    text = week + " week " + text;
+                }
+
+                lblStopwatch.setText(text);
+            }
+        });
+
         ViewPager viewOnGoing2 = findViewById(R.id.viewOnGoing2);
 
         TextView pagerIndicator = findViewById(R.id.jnl_txtOnGoingPagerIndicator);
@@ -143,6 +195,8 @@ public class JurnalActivity extends JnlActivity {
             @Override
             public void onPageSelected(int position) {
                 pagerIndicator.setText(getString(R.string.pagerIndicator, position + 1, aktivitasViewsOnGoing.size()));
+                ongoingAktIndex = position;
+                lblStopwatch = aktivitasViewsOnGoing.valueAt(ongoingAktIndex).findViewById(R.id.akt_stopwatch);
             }
 
             @Override
@@ -173,7 +227,11 @@ public class JurnalActivity extends JnlActivity {
 //            constraintSet.connect(textView.getId(), ConstraintSet.RIGHT, viewOnGoingWrap2.getId(), ConstraintSet.RIGHT);
 //            constraintSet.applyTo(viewOnGoingWrap2);
 
+            ongoingAktIndex = 0;
+            lblStopwatch = aktivitasRoot.findViewById(R.id.akt_stopwatch);
+            stopwatchAnim.start();
         } else {
+            stopwatchAnim.end();
             viewOnGoing2.getLayoutParams().height = 0;
             viewOnGoingWrap2.setVisibility(View.GONE);
         }
@@ -190,11 +248,14 @@ public class JurnalActivity extends JnlActivity {
         TextView textView = aktivitasRoot.findViewById(R.id.txtNama);
         textView.setText(jnlAktivitas.nama);
 
-        textView = aktivitasRoot.findViewById(R.id.txtTanggalMulai);
-        textView.setText(sdf.format(jnlAktivitas.aktivitasItems.valueAt(0).tanggal));
+//        ArrayList<AktivitasItem> items = new ArrayList<>();
+//        int nAktItem = jnlAktivitas.getSortedAktItemsByDate(items, jnlAktivitas.aktivitasItems);
 
-        ArrayList<AktivitasItem> items = new ArrayList<>();
-        int nAktItem = jnlAktivitas.getSortedAktItemsByDate(items, jnlAktivitas.aktivitasItems);
+        ArrayList<AktivitasItem> items = jnlAktivitas.getStortedAktItemsByDate();
+        int nAktItem = items.size();
+
+        textView = aktivitasRoot.findViewById(R.id.txtTanggalMulai);
+        textView.setText(sdf.format(items.get(0).tanggal));
 
         AktivitasItem itemTerbaru = items.get(nAktItem - 1);
 
@@ -214,6 +275,7 @@ public class JurnalActivity extends JnlActivity {
             aktivitasRoot.findViewById(R.id.akt_txtMomenTitle).setVisibility(View.GONE);
             aktivitasRoot.findViewById(R.id.txtMomen).setVisibility(View.GONE);
             aktivitasRoot.findViewById(R.id.txtTanggalMomen).setVisibility(View.GONE);
+            aktivitasRoot.findViewById(R.id.akt_stopwatch).setVisibility(View.GONE);
         }
 
         aktivitasBar.aktivitas = jnlAktivitas;

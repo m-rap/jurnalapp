@@ -64,8 +64,11 @@ public class ViewAktivitasFull {
         TextView textView;
         TableLayout tableLayout = aktiFull.findViewById(R.id.aktfu_paneAktItem);
         tableLayout.removeAllViews();
-        ArrayList<AktivitasItem> items = new ArrayList<>();
-        int nAktItem = jnlAktivitas.getSortedAktItemsByDate(items, jnlAktivitas.aktivitasItems);
+//        ArrayList<AktivitasItem> items = new ArrayList<>();
+//        int nAktItem = jnlAktivitas.getSortedAktItemsByDate(items, jnlAktivitas.aktivitasItems);
+
+        ArrayList<AktivitasItem> items = jnlAktivitas.getStortedAktItemsByDate();
+        int nAktItem = items.size();
 
 //        float density = that.getResources().getDisplayMetrics().scaledDensity;
 //

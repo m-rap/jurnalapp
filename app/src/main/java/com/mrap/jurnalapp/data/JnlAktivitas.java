@@ -27,6 +27,8 @@ public class JnlAktivitas extends JnlData {
     private SQLiteDatabase dbAktivitasItem = null;
     private DbFactory dbFactory = null;
 
+    private ArrayList<AktivitasItem> sortedAktivitasItems = new ArrayList<>();
+
     public void loadAktivitasItems() {
         Cursor c = dbAktivitasItem.rawQuery("SELECT * FROM aktivitas_item", null);
         if (!c.moveToFirst()) {
@@ -48,6 +50,9 @@ public class JnlAktivitas extends JnlData {
             aktivitasItems.put(item.id, item);
         } while (c.moveToNext());
         c.close();
+
+        sortedAktivitasItems.clear();
+        getSortedAktItemsByDate(sortedAktivitasItems, aktivitasItems);
     }
 
     public void tambahAktivitasItem(String judul, String note, Date tanggal) {
@@ -111,7 +116,7 @@ public class JnlAktivitas extends JnlData {
         hapusAktivitasItem(aktItemId);
     }
 
-    public int getSortedAktItemsByDate(ArrayList<AktivitasItem> items, SparseArray<AktivitasItem> aktivitasItems) {
+    private int getSortedAktItemsByDate(ArrayList<AktivitasItem> items, SparseArray<AktivitasItem> aktivitasItems) {
         int nAktItem = aktivitasItems.size();
         //Log.d(TAG, "nAktItem " + nAktItem);
         for (int i = 0; i < nAktItem; i++) {
@@ -124,6 +129,10 @@ public class JnlAktivitas extends JnlData {
             }
         });
         return nAktItem;
+    }
+
+    public ArrayList<AktivitasItem> getStortedAktItemsByDate() {
+        return sortedAktivitasItems;
     }
 
     @Override

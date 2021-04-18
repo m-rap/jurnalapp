@@ -19,9 +19,9 @@
     <string name="exm_time">10:00</string>
     <string name="exm_title">Judul</string>
     <string name="exm_note">Note</string>
-    <string name="started">Dimulai</string>
+    <string name="started">Dimulai:</string>
     <string name="exm_date">3 Maret 2021</string>
-    <string name="recentMoment">Momen terbaru</string>
+    <string name="recentMoment">Momen terbaru:</string>
     <string name="back">Kembali</string>
     <string name="ok">OK</string>
     <string name="yesDeleteJurnal">Ya, hapus jurnal</string>
