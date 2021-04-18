@@ -56,11 +56,11 @@ public class AktivitasBar extends LinearLayout {
         int gifWidth = progressGifs[0].getGifWidth();
         if (gifWidth > 0) {
             gifCount = measuredWidth / gifWidth;
+            if (measuredWidth % gifWidth != 0) {
+                gifCount++;
+            }
         } else {
             gifCount = 1;
-        }
-        if (measuredWidth % gifWidth != 0) {
-            gifCount++;
         }
 
 //        Log.d(TAG, "onMeasure " + measuredWidth / gifWidth + " " + measuredWidth % gifWidth + " " + gifCount);

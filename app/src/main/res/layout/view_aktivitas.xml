@@ -49,6 +49,7 @@
         android:id="@+id/akt_stopwatch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="3dp"
         android:text="@string/exm_stopwatch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/txtTanggalMulai" />

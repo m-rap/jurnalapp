@@ -138,7 +138,7 @@ public class JurnalActivity extends JnlActivity {
         stopwatchAnim.setTimeListener(new TimeAnimator.TimeListener() {
             @Override
             public void onTimeUpdate(TimeAnimator animation, long totalTime, long deltaTime) {
-                if (ongoingAktIndex == -1 || lblStopwatch == null) {
+                if (ongoingAktIndex == -1 || lblStopwatch == null || aktivitasOnGoing.size() == 0) {
                     return;
                 }
 
