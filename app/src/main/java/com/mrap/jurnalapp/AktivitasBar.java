@@ -25,6 +25,7 @@ public class AktivitasBar extends LinearLayout {
     GifNoView[] progressGifs = new GifNoView[] { new GifNoView() };
     private int gifCount = 1;
     Movie progressMov = null;
+    private long maxTimespan = -1;
 
     public AktivitasBar(Context context) {
         this(context, null);
@@ -120,6 +121,9 @@ public class AktivitasBar extends LinearLayout {
         long endTime = items.get(nAktItem - 1).tanggal.getTime();
         long timeLength = endTime - startTime;
         float lineWidth = canvas.getWidth() - poinRadius * 2;
+        if (maxTimespan != -1) {
+            lineWidth = timeLength * lineWidth / maxTimespan;
+        }
         float yStart = canvas.getHeight() / 2 - poinRadius;
         canvas.translate(0, yStart);
         canvas.drawLine(poinRadius, poinRadius, poinRadius + lineWidth, poinRadius, black);
@@ -128,5 +132,9 @@ public class AktivitasBar extends LinearLayout {
             float x = t * lineWidth / timeLength;
             canvas.drawCircle(x + poinRadius, poinRadius, poinRadius, blue);
         }
+    }
+
+    public void setMaxTimespan(long maxTimespan) {
+        this.maxTimespan = maxTimespan;
     }
 }

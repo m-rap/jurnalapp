@@ -8,7 +8,7 @@
         android:id="@+id/txtNama"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="3dp"
         android:text="@string/name"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,9 +18,9 @@
         android:id="@+id/viewBar"
         android:layout_width="0dp"
         android:layout_height="14sp"
-        android:layout_marginStart="3dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="3dp"
-        android:layout_marginEnd="3dp"
+        android:layout_marginEnd="10dp"
         android:background="#313131"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,6 +33,7 @@
         android:layout_marginStart="3dp"
         android:layout_marginTop="3dp"
         android:text="@string/started"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewBar" />
 
@@ -41,15 +42,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="3dp"
         android:text="@string/exm_date"
         app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toTopOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/viewBar" />
 
     <TextView
         android:id="@+id/akt_stopwatch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="3dp"
+        android:layout_marginEnd="10dp"
         android:text="@string/exm_stopwatch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/txtTanggalMulai" />
@@ -58,20 +60,21 @@
         android:id="@+id/akt_txtMomenTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="3dp"
         android:text="@string/recentMoment"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintStart_toEndOf="@+id/txtTanggalMulai"
+        app:layout_constraintTop_toBottomOf="@+id/viewBar" />
 
     <TextView
         android:id="@+id/txtMomen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
+        android:layout_marginTop="3dp"
         android:text="@string/exm_title"
         app:layout_constraintStart_toEndOf="@+id/akt_txtMomenTitle"
-        app:layout_constraintTop_toTopOf="@+id/akt_txtMomenTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/viewBar" />
 
     <TextView
         android:id="@+id/txtTanggalMomen"

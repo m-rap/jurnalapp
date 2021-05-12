@@ -40,6 +40,9 @@ public class JurnalActivity extends JnlActivity {
     SparseArray<View> aktivitasViews = new SparseArray<>();
     SparseArray<View> aktivitasViewsOnGoing = new SparseArray<>();
     SparseArray<JnlAktivitas> aktivitasOnGoing = new SparseArray<>();
+    SparseArray<View> aktivitasViewsFinished = new SparseArray<>();
+
+    long maxTimespan = Long.MIN_VALUE;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,6 +87,8 @@ public class JurnalActivity extends JnlActivity {
         aktivitasViews.clear();
         aktivitasViewsOnGoing.clear();
         aktivitasOnGoing.clear();
+        aktivitasViewsFinished.clear();
+        maxTimespan = Long.MIN_VALUE;
 
         Util util = new Util(this);
         int margin = (int)util.convertDipToPix(10);
@@ -112,6 +117,7 @@ public class JurnalActivity extends JnlActivity {
                 lp.topMargin = lp.rightMargin = lp.bottomMargin = lp.leftMargin = margin;
                 aktivitasRoot.setLayoutParams(lp);
                 viewListAktivitas.addView(aktivitasRoot);
+                aktivitasViewsFinished.put(jnlAktivitas.id, aktivitasRoot);
 
                 nOnGoingCount++;
             }
@@ -124,6 +130,13 @@ public class JurnalActivity extends JnlActivity {
                     openContextMenu(aktivitasRoot);
                 }
             });
+        }
+
+        for (int i = 0; i < aktivitasViewsFinished.size(); i++) {
+            ConstraintLayout aktivitasRoot = (ConstraintLayout)aktivitasViewsFinished.valueAt(i);
+            AktivitasBar aktivitasBar = aktivitasRoot.findViewById(R.id.viewBar);
+            aktivitasBar.setMaxTimespan(maxTimespan);
+            aktivitasBar.invalidate();
         }
 
         refreshOnGoingPane();
@@ -254,12 +267,14 @@ public class JurnalActivity extends JnlActivity {
         ArrayList<AktivitasItem> items = jnlAktivitas.getStortedAktItemsByDate();
         int nAktItem = items.size();
 
+        AktivitasItem itemMulai = items.get(0);
         textView = aktivitasRoot.findViewById(R.id.txtTanggalMulai);
-        textView.setText(sdf.format(items.get(0).tanggal));
+        textView.setText(sdf.format(itemMulai.tanggal));
 
         AktivitasItem itemTerbaru = items.get(nAktItem - 1);
 
         AktivitasBar aktivitasBar = aktivitasRoot.findViewById(R.id.viewBar);
+        aktivitasBar.setMaxTimespan(-1);
         if (progressMov != null) {
             aktivitasBar.setProgressMov(progressMov);
         }
@@ -276,6 +291,11 @@ public class JurnalActivity extends JnlActivity {
             aktivitasRoot.findViewById(R.id.txtMomen).setVisibility(View.GONE);
             aktivitasRoot.findViewById(R.id.txtTanggalMomen).setVisibility(View.GONE);
             aktivitasRoot.findViewById(R.id.akt_stopwatch).setVisibility(View.GONE);
+
+            long timespan = itemTerbaru.tanggal.getTime() - itemMulai.tanggal.getTime();
+            if (timespan > maxTimespan) {
+                maxTimespan = timespan;
+            }
         }
 
         aktivitasBar.aktivitas = jnlAktivitas;
