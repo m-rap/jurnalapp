@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Movie;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 //import android.util.Log;
 import android.util.Log;
@@ -21,6 +22,7 @@ public class AktivitasBar extends LinearLayout {
     private final Paint red;
     private final Paint blue;
     private final Paint black;
+    private final Drawable pointStart, pointFinish;
     public JnlAktivitas aktivitas = null;
     GifNoView[] progressGifs = new GifNoView[] { new GifNoView() };
     private int gifCount = 1;
@@ -40,6 +42,9 @@ public class AktivitasBar extends LinearLayout {
         red.setColor(Color.parseColor("#ff0000"));
         black.setColor(Color.parseColor("#000000"));
         blue.setColor(Color.parseColor("#0000ff"));
+
+        pointStart = getResources().getDrawable(R.drawable.point_start, null);
+        pointFinish = getResources().getDrawable(R.drawable.point_finish, null);
     }
 
     public void setProgressMov(Movie m) {
@@ -117,6 +122,9 @@ public class AktivitasBar extends LinearLayout {
 
         Util util = new Util(getContext());
         float poinRadius = (int)util.convertDipToPix(5);
+        int poinDiameter = (int)(poinRadius*2);
+        pointStart.setBounds(0, 0, poinDiameter, poinDiameter);
+        pointFinish.setBounds(0, 0, poinDiameter, poinDiameter);
         long startTime = items.get(0).tanggal.getTime();
         long endTime = items.get(nAktItem - 1).tanggal.getTime();
         long timeLength = endTime - startTime;
@@ -130,7 +138,19 @@ public class AktivitasBar extends LinearLayout {
         for (int i = 0; i < nAktItem; i++) {
             long t = items.get(i).tanggal.getTime() - startTime;
             float x = t * lineWidth / timeLength;
-            canvas.drawCircle(x + poinRadius, poinRadius, poinRadius, blue);
+
+            if (i > 0 && i < nAktItem - 1) {
+                canvas.drawCircle(x + poinRadius, poinRadius, poinRadius, blue);
+            } else {
+                canvas.save();
+                canvas.translate(x, 0);
+                if (i == 0) {
+                    pointStart.draw(canvas);
+                } else {
+                    pointFinish.draw(canvas);
+                }
+                canvas.restore();
+            }
         }
     }
 
